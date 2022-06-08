@@ -1,12 +1,17 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
+import com.appledeveloperacademy.MC2Server.service.RoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequestMapping("/api/rooms")
 @RestController
-public class roomController {
+@RequiredArgsConstructor
+public class RoomController {
+
+    private final RoomService roomService;
 
     // List all rooms managed by a user
     @GetMapping

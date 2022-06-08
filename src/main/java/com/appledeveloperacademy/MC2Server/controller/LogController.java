@@ -1,5 +1,7 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
+import com.appledeveloperacademy.MC2Server.service.LogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -7,7 +9,9 @@ import java.util.List;
 
 @RequestMapping("/api/rooms")
 @RestController
-public class logController {
+@RequiredArgsConstructor
+public class LogController {
+    private final LogService logService;
 
     // List summarized logs for a particular room
     @GetMapping("/{roomId}/logs")

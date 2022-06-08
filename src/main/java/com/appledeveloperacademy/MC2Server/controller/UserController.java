@@ -1,10 +1,14 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
+import com.appledeveloperacademy.MC2Server.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/users")
 @RestController
-public class userController {
+@RequiredArgsConstructor
+public class UserController {
+    private final UserService userService;
 
     @PostMapping
     public String createUser(@RequestBody final CreateUserReq createUserReq) {
