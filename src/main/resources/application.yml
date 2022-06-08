@@ -9,11 +9,11 @@ spring:
     username: ndom
     password: ndom1234
 
-
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
+      format_sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
+#    generate-ddl: true
     show-sql: true
