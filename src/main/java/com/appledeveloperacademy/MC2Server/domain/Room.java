@@ -27,4 +27,7 @@ public class Room extends CreationModificationLog {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Album> albums = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<HealthTagActivated> activatedTags = new ArrayList<>();
 }
