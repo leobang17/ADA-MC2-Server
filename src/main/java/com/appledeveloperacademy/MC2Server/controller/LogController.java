@@ -1,11 +1,18 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
+import com.appledeveloperacademy.MC2Server.domain.log.DietLog;
+import com.appledeveloperacademy.MC2Server.domain.log.HealthLog;
+import com.appledeveloperacademy.MC2Server.domain.log.MemoLog;
+import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
+import com.appledeveloperacademy.MC2Server.dto.log.*;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/rooms")
 @RestController
@@ -15,20 +22,25 @@ public class LogController {
 
     // List summarized logs for a particular room
     @GetMapping("/{roomId}/logs")
-    public String getLogs(
+    public ResponseEntity<SummerizedLogDto> getLogs(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
     ) {
-        return "getLogs";
+        final Long userId = 0L;
+        SummerizedLogDto summerizedLogs = logService.getSummerizedLogs(userId, roomId, isPrivate);
+        return ResponseEntity.ok(summerizedLogs);
     }
 
     // List diet logs for a particular room
     @GetMapping("/{roomId}/diets")
-    public String getDiets(
+    public ResponseEntity<ListedResult<DietLogDto>> getDiets(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
     ) {
-        return "getDiets";
+        final Long userId = 0L;
+        List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate);
+        List<DietLogDto> collect = dietLogs.stream().map(DietLogDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok(new ListedResult(collect));
     }
 
     // Create diet log for a particular room
@@ -42,11 +54,15 @@ public class LogController {
 
     // List watering logs for a particular room
     @GetMapping("/{roomId}/waters")
-    public String getWaters(
+    public ResponseEntity<ListedResult<WaterLogDto>> getWaters(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
     ) {
-        return "getWaters";
+        final Long userId = 0L;
+        List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate);
+        List<WaterLogDto> collect = waterLogs.stream().map(WaterLogDto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new ListedResult<>(collect));
     }
 
     // Create watering log for a particular room
@@ -60,11 +76,15 @@ public class LogController {
 
     // List health logs for a particular room
     @GetMapping("/{roomId}/health")
-    public String getHealth(
+    public ResponseEntity<ListedResult<HealthLogDto>> getHealth(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
     ) {
-        return "getHealth";
+        final Long userId = 0L;
+        List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate);
+        List<HealthLogDto> collect = healthLogs.stream().map(HealthLogDto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new ListedResult<>(collect));
     }
 
     // Create health log for a particular room
@@ -78,11 +98,14 @@ public class LogController {
 
     // List memo logs for a particular room
     @GetMapping("/{roomId}/memos")
-    public String getMemos(
+    public ResponseEntity<ListedResult<MemoLogDto>> getMemos(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
     ) {
-        return "getMemos";
+        final Long userId = 0L;
+        List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate);
+        List<MemoLogDto> collect = memoLogs.stream().map(MemoLogDto::new).collect(Collectors.toList());
+        return ResponseEntity.ok(new ListedResult<>(collect));
     }
 
     // Create memo log for a particular room
@@ -120,7 +143,6 @@ public class LogController {
     static class MemoInputDto {
         private String content;
     }
-
 
 }
 

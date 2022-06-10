@@ -2,12 +2,14 @@ package com.appledeveloperacademy.MC2Server.domain;
 
 import com.appledeveloperacademy.MC2Server.domain.enums.Gender;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class Cat {
     @Id @GeneratedValue
     @Column(name = "cat_id")
@@ -25,8 +27,11 @@ public class Cat {
 
     private boolean neutralized;
 
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "main_img_url")
+    private String mainImgUrl;
+
+    @Column(name = "profile_img_url")
+    private String profileImgUrl;
 
     private Long intimacy;
 

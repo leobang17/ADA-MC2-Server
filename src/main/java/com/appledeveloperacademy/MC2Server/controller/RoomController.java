@@ -1,7 +1,13 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
+import com.appledeveloperacademy.MC2Server.domain.Cat;
+import com.appledeveloperacademy.MC2Server.dto.CatInfoDto;
+import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
+import com.appledeveloperacademy.MC2Server.dto.ParticipatingRoomDto;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +21,10 @@ public class RoomController {
 
     // List all rooms managed by a user
     @GetMapping
-    public String getAllRooms() {
-        return "getAllRooms";
+    public ResponseEntity<ListedResult<ParticipatingRoomDto>> getAllRooms() {
+        Long userId = 1L;
+        List<ParticipatingRoomDto> rooms = roomService.findAllParticipatingRooms(userId);
+        return ResponseEntity.ok(new ListedResult<>(rooms));
     }
 
     // Create a new room
@@ -27,8 +35,9 @@ public class RoomController {
 
     // Check if invitation code exists to specific room.
     @GetMapping("/{roomId}/invitation-codes")
-    public String checkInvitation(@PathVariable final Long roomId) {
-        return "checkInvitation";
+    public ResponseEntity<InvitationCodeDto> checkInvitation(@PathVariable final Long roomId) {
+        InvitationCodeDto invitation = roomService.findInvitationCodeByRoomId(roomId);
+        return ResponseEntity.ok(invitation);
     }
 
     // Create invitation codes for a particular room
@@ -51,14 +60,19 @@ public class RoomController {
         return "mergeRoom";
     }
 
-    static class CatInfoDto {
-        private String name;
-        private String gender;
-        private boolean neutralization;
-        private int age;
-        private String type;
-        private List<String> health;
-        private String imgUrl;
+    @GetMapping("/{roomId}/cats/{catId}")
+    public ResponseEntity<CatInfoDto> getCatProfile(@PathVariable final Long roomId, @PathVariable final Long catId) {
+        Cat findCat = roomService.findCatByCatId(catId);
+        return ResponseEntity.ok(new CatInfoDto(findCat));
     }
 
+//    static class CatInfoDto {
+//        private String name;
+//        private String gender;
+//        private boolean neutralization;
+//        private int age;
+//        private String type;
+//        private List<String> health;
+//        private String imgUrl;
+//    }
 }
