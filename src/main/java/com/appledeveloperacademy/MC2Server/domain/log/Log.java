@@ -2,6 +2,7 @@ package com.appledeveloperacademy.MC2Server.domain.log;
 
 import com.appledeveloperacademy.MC2Server.domain.superclass.CreationModificationLog;
 import com.appledeveloperacademy.MC2Server.domain.superclass.MemberRoomIntermediate;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

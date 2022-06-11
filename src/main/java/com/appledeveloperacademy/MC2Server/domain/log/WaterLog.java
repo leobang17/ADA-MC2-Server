@@ -1,5 +1,6 @@
 package com.appledeveloperacademy.MC2Server.domain.log;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @DiscriminatorValue(value = "W")
 @Getter @Setter
+@AllArgsConstructor
 public class WaterLog extends Log{
     private int amount;
 

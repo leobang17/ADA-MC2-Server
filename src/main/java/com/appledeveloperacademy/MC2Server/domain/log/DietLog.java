@@ -1,6 +1,8 @@
 package com.appledeveloperacademy.MC2Server.domain.log;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -11,8 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @DiscriminatorValue(value = "D")
 @Getter @Setter
+@AllArgsConstructor
 public class DietLog extends Log {
-    private String name;
+    private String type;
     private int amount;
 
     @Column(name = "created_at", updatable = false)
