@@ -30,4 +30,17 @@ public class Room extends CreationModificationLog {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<HealthTagActivated> activatedTags = new ArrayList<>();
+
+    public void addMemberRoom(MemberRoom memberRoom) {
+        memberRooms.add(memberRoom);
+        memberRoom.setRoom(this);
+    }
+
+    public static Room createRoom(MemberRoom memberRoom, Cat cat) {
+        memberRoom.addCat(cat);
+        Room room = new Room();
+        room.addMemberRoom(memberRoom);
+
+        return room;
+    }
 }

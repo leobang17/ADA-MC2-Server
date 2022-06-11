@@ -65,14 +65,4 @@ public class RoomController {
         Cat findCat = roomService.findCatByCatId(catId);
         return ResponseEntity.ok(new CatInfoDto(findCat));
     }
-
-//    static class CatInfoDto {
-//        private String name;
-//        private String gender;
-//        private boolean neutralization;
-//        private int age;
-//        private String type;
-//        private List<String> health;
-//        private String imgUrl;
-//    }
 }

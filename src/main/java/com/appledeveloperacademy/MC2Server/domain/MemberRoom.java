@@ -2,10 +2,13 @@ package com.appledeveloperacademy.MC2Server.domain;
 
 import com.appledeveloperacademy.MC2Server.domain.enums.Role;
 import com.appledeveloperacademy.MC2Server.domain.superclass.MemberRoomIntermediate;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter @Setter
 public class MemberRoom extends MemberRoomIntermediate {
     @Id @GeneratedValue
     @Column(name = "member_room_id")
@@ -25,4 +28,15 @@ public class MemberRoom extends MemberRoomIntermediate {
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    public static MemberRoom createMemberRoom(Member member) {
+        MemberRoom memberRoom = new MemberRoom();
+        memberRoom.setMember(member);
+        return memberRoom;
+    }
+
+    public void addCat(Cat cat) {
+        cat.setMemberRoom(this);
+        this.setCat(cat);
+    }
 }
