@@ -1,5 +1,6 @@
 package com.appledeveloperacademy.MC2Server.domain;
 
+import com.appledeveloperacademy.MC2Server.domain.log.Log;
 import com.appledeveloperacademy.MC2Server.domain.superclass.CreationModificationLog;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,15 @@ public class Room extends CreationModificationLog {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<HealthTagActivated> activatedTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<Log> logs = new ArrayList<>();
+
+
+    public void addLog(Log log) {
+        logs.add(log);
+        log.setRoom(this);
+    }
 
     public void addMemberRoom(MemberRoom memberRoom) {
         memberRooms.add(memberRoom);

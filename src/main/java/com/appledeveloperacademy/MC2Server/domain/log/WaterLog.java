@@ -2,6 +2,7 @@ package com.appledeveloperacademy.MC2Server.domain.log;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @DiscriminatorValue(value = "W")
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class WaterLog extends Log{
     private int amount;
 

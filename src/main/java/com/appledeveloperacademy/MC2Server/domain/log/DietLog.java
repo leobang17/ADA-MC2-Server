@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @DiscriminatorValue(value = "D")
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class DietLog extends Log {
     private String type;
     private int amount;
