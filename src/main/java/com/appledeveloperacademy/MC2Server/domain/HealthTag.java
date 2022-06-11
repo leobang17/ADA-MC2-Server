@@ -21,4 +21,9 @@ public class HealthTag extends CreationLog {
     private Member member;
 
     private String content;
+
+    public void addHealthTag(Member member) {
+        this.member = member;
+        member.getHealthTags().add(this);
+    }
 }
