@@ -79,7 +79,7 @@ public class LogServiceMock implements LogService {
     }
 
     private DietLog dietLogBuilder(Long logId, String dietName, int dietAmount, boolean isPublic, Long memberId, String username) {
-        DietLog dietLog = new DietLog(dietName, dietAmount);
+        DietLog dietLog = new DietLog(dietName, dietAmount, LocalDateTime.now());
         dietLog.setId(logId);
         dietLog.setPublic(isPublic);
         dietLog.setCreatedAt(LocalDateTime.now());
@@ -91,7 +91,7 @@ public class LogServiceMock implements LogService {
     }
 
     private WaterLog waterLogBuilder(Long logId, int waterAmount, boolean isPublic, Long memberId, String username) {
-        WaterLog waterLog = new WaterLog(waterAmount);
+        WaterLog waterLog = new WaterLog(waterAmount, LocalDateTime.now());
         waterLog.setId(logId);
         waterLog.setPublic(isPublic);
         waterLog.setCreatedAt(LocalDateTime.now());
