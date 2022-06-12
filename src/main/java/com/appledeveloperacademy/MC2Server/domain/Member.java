@@ -32,4 +32,10 @@ public class Member extends CreationModificationLog {
     @Column(unique = true)
     private String usercode;
 
+    public void addHealthTags(HealthTag ...healthTags) {
+        for (HealthTag healthTag : healthTags) {
+            this.getHealthTags().add(healthTag);
+            healthTag.setMember(this);
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
+import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
 import com.appledeveloperacademy.MC2Server.service.UserService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,8 +15,13 @@ import java.util.List;
 public class UserServiceMock implements UserService {
 
     @Override
-    public UserInfoDto findUserByUserCode(String usercode) {
-        return new UserInfoDto(1L, "Leo", usercode, LocalDateTime.now());
+    public Member findUserByUserCode(String usercode) {
+        Member member = new Member();
+        member.setId(1L);
+        member.setUsercode(usercode);
+        member.setCreatedAt(LocalDateTime.now());
+        member.setUsername("Leo");
+        return member;
     }
 
     @Override

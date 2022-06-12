@@ -6,6 +6,7 @@ import com.appledeveloperacademy.MC2Server.domain.enums.HealthLogAction;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
 import com.appledeveloperacademy.MC2Server.service.LogService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Qualifier("logServiceMock")
 public class LogServiceMock implements LogService {
 
     @Override

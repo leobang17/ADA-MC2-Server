@@ -1,10 +1,12 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
+import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.HealthTagDto;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+    @Qualifier(value = "userServiceV1")
     private final UserService userService;
 
     @PostMapping
@@ -26,8 +29,8 @@ public class UserController {
 
     @GetMapping("/{usercode}")
     public ResponseEntity<UserInfoDto> getUser(@PathVariable final String usercode) {
-        UserInfoDto findUser = userService.findUserByUserCode(usercode);
-        return ResponseEntity.status(HttpStatus.OK).body(findUser);
+        Member findUser = userService.findUserByUserCode(usercode);
+        return ResponseEntity.status(HttpStatus.OK).body(UserInfoDto.build(findUser));
     }
 
     @GetMapping("/health-tags")
