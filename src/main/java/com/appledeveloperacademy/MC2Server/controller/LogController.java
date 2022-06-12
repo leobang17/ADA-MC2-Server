@@ -24,7 +24,7 @@ public class LogController {
     @GetMapping("/{roomId}/logs")
     public ResponseEntity<SummerizedLogDto> getLogs(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
+            @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate
     ) {
         final Long userId = 0L;
         SummerizedLogDto summerizedLogs = logService.getSummerizedLogs(userId, roomId, isPrivate);
@@ -35,9 +35,9 @@ public class LogController {
     @GetMapping("/{roomId}/diets")
     public ResponseEntity<PagedListResult<DietLogDto>> getDiets(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
-            @RequestParam(name = "limit", defaultValue = "20") final int limit,
-            @RequestParam(name = "offset", required = false) final int offset
+            @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
         List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate);
@@ -58,9 +58,9 @@ public class LogController {
     @GetMapping("/{roomId}/waters")
     public ResponseEntity<PagedListResult<WaterLogDto>> getWaters(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
-            @RequestParam(name = "limit", defaultValue = "20") final int limit,
-            @RequestParam(name = "offset", required = false) final int offset
+            @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
         List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate);
@@ -82,9 +82,9 @@ public class LogController {
     @GetMapping("/{roomId}/health")
     public ResponseEntity<PagedListResult<HealthLogDto>> getHealth(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
-            @RequestParam(name = "limit", defaultValue = "20") final int limit,
-            @RequestParam(name = "offset", required = false) final int offset
+            @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
         List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate);
@@ -106,9 +106,9 @@ public class LogController {
     @GetMapping("/{roomId}/memos")
     public ResponseEntity<PagedListResult<MemoLogDto>> getMemos(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
-            @RequestParam(name = "limit", defaultValue = "20") final int limit,
-            @RequestParam(name = "offset", required = false) final int offset
+            @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
         List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate);
