@@ -3,6 +3,7 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class UserServiceMock implements UserService {
         tags.add(tag3);
         tags.add(tag4);
         return tags;
+    }
+
+    @Override
+    public Long createUser(CreateUserReq createUserReq) {
+        return null;
     }
 
     private HealthTag buildHealthTag(Long tagId, String content) {

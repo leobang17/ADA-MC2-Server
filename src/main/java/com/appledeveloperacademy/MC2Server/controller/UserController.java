@@ -4,6 +4,7 @@ import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.HealthTagDto;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,9 +40,5 @@ public class UserController {
         List<HealthTag> tags = userService.findHealthTagsByUserId(userId);
         List<HealthTagDto> collect = tags.stream().map(HealthTagDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new ListedResult<>(collect));
-    }
-    
-    static class CreateUserReq {
-        private String username;
     }
 }

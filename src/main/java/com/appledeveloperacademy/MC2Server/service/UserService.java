@@ -3,6 +3,7 @@ package com.appledeveloperacademy.MC2Server.service;
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface UserService {
     Member findUserByUserCode(String usercode);
 
     List<HealthTag> findHealthTagsByUserId(Long userId);
+    Long createUser(CreateUserReq createUserReq);
 }

@@ -23,10 +23,10 @@ public class UserRepository {
         return em.find(Member.class, userId);
     }
 
-    public Member findByUsercode(String usercode) throws NoResultException {
+    public List<Member> findByUsercode(String usercode) throws NoResultException {
         return em.createQuery("select m from Member m where m.usercode = :usercode", Member.class)
                 .setParameter("usercode", usercode)
-                .getSingleResult();
+                .getResultList();
     }
 
     public List<HealthTag> listHealthTagsById(Long userId) {
