@@ -2,6 +2,7 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -57,5 +59,32 @@ class UserServiceV1Test {
 
         // then
         assertEquals(2, healthTagsByUserId.size());
+    }
+
+    @Test
+    void randomSixNumberTest() {
+        // given
+        String s = (String) ReflectionTestUtils.invokeMethod(service,  "generateUsercode");
+
+        // when
+        System.out.println(s);
+        // then
+        assertEquals(6, s.length());
+    }
+
+    @Test
+    void createUserTest() {
+        // given
+        CreateUserReq createUserReq = new CreateUserReq();
+        createUserReq.setUsername("Leo");
+        Long userId = service.createUser(createUserReq);
+
+        // when
+        em.flush();
+        Member member = em.find(Member.class, userId);
+
+        // then
+        assertEquals("Leo", member.getUsername());
+        System.out.println(member.getUsercode());
     }
 }

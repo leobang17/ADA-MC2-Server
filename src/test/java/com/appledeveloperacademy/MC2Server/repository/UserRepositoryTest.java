@@ -47,10 +47,10 @@ class UserRepositoryTest {
         userRepository.save(member);
 
         // when
-        Member byUsercode = userRepository.findByUsercode(member.getUsercode());
+        List<Member> byUsercode = userRepository.findByUsercode(member.getUsercode());
 
         // then
-        assertEquals(member.getUsercode(), byUsercode.getUsercode());
+        assertEquals(member.getUsercode(), byUsercode.get(0).getUsercode());
     }
 
     @Test
