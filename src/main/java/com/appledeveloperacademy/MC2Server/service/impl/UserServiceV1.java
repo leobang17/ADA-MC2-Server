@@ -45,6 +45,7 @@ public class UserServiceV1 implements UserService {
         Member member = new Member(createUserReq.getUsername(), usercode);
 
         userRepository.save(member);
+
         return member.getId();
     }
 

@@ -8,6 +8,7 @@ import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +19,17 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/api/users")
 @RestController
-@RequiredArgsConstructor
 public class UserController {
-    @Qualifier(value = "userServiceV1")
     private final UserService userService;
+
+    public UserController(@Qualifier(value = "userServiceV1") UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public ResponseEntity createUser(@RequestBody final CreateUserReq createUserReq) {
-        return ResponseEntity.created(URI.create("/users/")).build();
+        Long userId = userService.createUser(createUserReq);
+        return ResponseEntity.created(URI.create("/users/" + userId.toString())).build();
     }
 
     @GetMapping("/{usercode}")

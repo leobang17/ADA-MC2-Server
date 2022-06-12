@@ -6,6 +6,7 @@ import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import org.apache.tomcat.jni.Local;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Qualifier(value = "userServiceMock")
 public class UserServiceMock implements UserService {
 
     @Override
@@ -42,6 +44,7 @@ public class UserServiceMock implements UserService {
 
     @Override
     public Long createUser(CreateUserReq createUserReq) {
+        System.out.println("\n\n\n\n\n 으아ㅏ아아ㅏ아ㅏ아ㅏ아아");
         return null;
     }
 
