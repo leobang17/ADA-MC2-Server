@@ -1,6 +1,5 @@
 package com.appledeveloperacademy.MC2Server.repository;
 
-import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
 import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.DietLog;
 import com.appledeveloperacademy.MC2Server.domain.log.Log;
@@ -30,9 +29,13 @@ class LogRepositoryTest {
     void getDietLogsTest() {
         // given
         DietLog dietLog = new DietLog();
+        dietLog.setPublic(true);
         DietLog dietLog1 = new DietLog();
+        dietLog1.setPublic(true);
         DietLog dietLog2 = new DietLog();
+        dietLog2.setPublic(false);
         WaterLog waterLog = new WaterLog();
+        waterLog.setPublic(true);
         MemoLog memoLog = new MemoLog();
 
 
@@ -47,12 +50,14 @@ class LogRepositoryTest {
         em.flush();
 
         // when
-        List<Log> waterLogs = logRepository.getLogsByRoomId(room.getId(), LogType.WATER);
-        List<Log> dietLogs = logRepository.getLogsByRoomId(room.getId(), LogType.DIET);
+        List<Log> waterLogs = logRepository.getLogsByRoomId(room.getId(), LogType.WATER, false);
+        List<Log> dietLogsPublic = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, false);
+        List<Log> dietLogsPrivate = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, true);
 
         // then
         assertEquals(1, waterLogs.size());
-        assertEquals(3, dietLogs.size());
+        assertEquals(2, dietLogsPublic.size());
+        assertEquals(1, dietLogsPrivate.size());
     }
 
 }
