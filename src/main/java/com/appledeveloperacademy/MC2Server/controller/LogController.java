@@ -35,7 +35,9 @@ public class LogController {
     @GetMapping("/{roomId}/diets")
     public ResponseEntity<ListedResult<DietLogDto>> getDiets(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
+            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false) final int offset
     ) {
         final Long userId = 0L;
         List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate);
@@ -56,7 +58,9 @@ public class LogController {
     @GetMapping("/{roomId}/waters")
     public ResponseEntity<ListedResult<WaterLogDto>> getWaters(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
+            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false) final int offset
     ) {
         final Long userId = 0L;
         List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate);
@@ -78,7 +82,9 @@ public class LogController {
     @GetMapping("/{roomId}/health")
     public ResponseEntity<ListedResult<HealthLogDto>> getHealth(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
+            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false) final int offset
     ) {
         final Long userId = 0L;
         List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate);
@@ -100,7 +106,9 @@ public class LogController {
     @GetMapping("/{roomId}/memos")
     public ResponseEntity<ListedResult<MemoLogDto>> getMemos(
             @PathVariable final Long roomId,
-            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate
+            @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
+            @RequestParam(name = "limit", defaultValue = "20") final int limit,
+            @RequestParam(name = "offset", required = false) final int offset
     ) {
         final Long userId = 0L;
         List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate);
