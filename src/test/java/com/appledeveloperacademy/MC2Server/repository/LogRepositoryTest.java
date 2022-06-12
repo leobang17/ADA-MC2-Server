@@ -50,9 +50,9 @@ class LogRepositoryTest {
         em.flush();
 
         // when
-        List<Log> waterLogs = logRepository.getLogsByRoomId(room.getId(), LogType.WATER, false);
-        List<Log> dietLogsPublic = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, false);
-        List<Log> dietLogsPrivate = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, true);
+        List<Log> waterLogs = logRepository.getLogsByRoomId(room.getId(), LogType.WATER, false, 0, 10);
+        List<Log> dietLogsPublic = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, false, 0, 10);
+        List<Log> dietLogsPrivate = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, true, 0, 10);
 
         // then
         assertEquals(1, waterLogs.size());
