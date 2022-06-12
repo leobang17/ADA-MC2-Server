@@ -14,8 +14,9 @@ public class LogRepository {
 
     private final EntityManager em;
 
-    public List<Log> getLogsByRoomId(Long roomId, LogType type) {
-        return em.createQuery(logQueryGenerator(roomId, type), Log.class)
+    public List<Log> getLogsByRoomId(Long roomId, LogType type, boolean isPrivate) {
+        return em.createQuery(logQueryGenerator(roomId, type) + " AND l.isPublic = :public", Log.class)
+                .setParameter("public", !isPrivate)
                 .getResultList();
     }
 
