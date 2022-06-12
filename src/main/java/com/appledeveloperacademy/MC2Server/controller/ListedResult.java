@@ -11,8 +11,8 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 public class ListedResult<T> {
-    private int count;
-    private List<T> data;
+    protected int count;
+    protected List<T> data;
 
     public ListedResult(List<T> data) {
         this.data = data;

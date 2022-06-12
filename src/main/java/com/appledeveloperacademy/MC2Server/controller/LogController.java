@@ -33,7 +33,7 @@ public class LogController {
 
     // List diet logs for a particular room
     @GetMapping("/{roomId}/diets")
-    public ResponseEntity<ListedResult<DietLogDto>> getDiets(
+    public ResponseEntity<PagedListResult<DietLogDto>> getDiets(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", defaultValue = "20") final int limit,
@@ -42,7 +42,7 @@ public class LogController {
         final Long userId = 0L;
         List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate);
         List<DietLogDto> collect = dietLogs.stream().map(DietLogDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok(new ListedResult(collect));
+        return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }
 
     // Create diet log for a particular room
@@ -56,7 +56,7 @@ public class LogController {
 
     // List watering logs for a particular room
     @GetMapping("/{roomId}/waters")
-    public ResponseEntity<ListedResult<WaterLogDto>> getWaters(
+    public ResponseEntity<PagedListResult<WaterLogDto>> getWaters(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", defaultValue = "20") final int limit,
@@ -66,7 +66,7 @@ public class LogController {
         List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate);
         List<WaterLogDto> collect = waterLogs.stream().map(WaterLogDto::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(new ListedResult<>(collect));
+        return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }
 
     // Create watering log for a particular room
@@ -80,7 +80,7 @@ public class LogController {
 
     // List health logs for a particular room
     @GetMapping("/{roomId}/health")
-    public ResponseEntity<ListedResult<HealthLogDto>> getHealth(
+    public ResponseEntity<PagedListResult<HealthLogDto>> getHealth(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", defaultValue = "20") final int limit,
@@ -90,7 +90,7 @@ public class LogController {
         List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate);
         List<HealthLogDto> collect = healthLogs.stream().map(HealthLogDto::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(new ListedResult<>(collect));
+        return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }
 
     // Create health log for a particular room
@@ -104,7 +104,7 @@ public class LogController {
 
     // List memo logs for a particular room
     @GetMapping("/{roomId}/memos")
-    public ResponseEntity<ListedResult<MemoLogDto>> getMemos(
+    public ResponseEntity<PagedListResult<MemoLogDto>> getMemos(
             @PathVariable final Long roomId,
             @RequestParam(name = "private", defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", defaultValue = "20") final int limit,
@@ -113,7 +113,7 @@ public class LogController {
         final Long userId = 0L;
         List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate);
         List<MemoLogDto> collect = memoLogs.stream().map(MemoLogDto::new).collect(Collectors.toList());
-        return ResponseEntity.ok(new ListedResult<>(collect));
+        return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }
 
     // Create memo log for a particular room
