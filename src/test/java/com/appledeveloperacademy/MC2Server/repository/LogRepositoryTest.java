@@ -1,5 +1,6 @@
 package com.appledeveloperacademy.MC2Server.repository;
 
+import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.DietLog;
 import com.appledeveloperacademy.MC2Server.domain.log.Log;
@@ -24,6 +25,47 @@ import static org.junit.jupiter.api.Assertions.*;
 class LogRepositoryTest {
     @Autowired EntityManager em;
     @Autowired LogRepository logRepository;
+
+
+    @Test
+    void findDietLog() {
+        // given 
+        DietLog dietLog = new DietLog();
+        dietLog.setPublic(true);
+        Member member = new Member();
+        Room room = new Room();
+        dietLog.setMember(member);
+        room.addLog(dietLog);
+        em.persist(room);
+        em.persist(member);
+
+
+        // when 
+        em.flush();
+        DietLog dietLogByRoomId = logRepository.findDietLogByRoomId(room.getId(), false);
+
+        // then
+        assertEquals(member, dietLogByRoomId.getMember());
+    }
+
+    @Test
+    void downcastTest() {
+        DietLog dietLog = new DietLog();
+        Room room = new Room();
+        room.addLog(dietLog);
+        em.persist(room);
+
+        em.flush();
+
+        DietLog singleResult = em.createQuery(
+                        "SELECT d" +
+                                " FROM DietLog d" +
+                                " JOIN d.room r" +
+                                " WHERE r.id = :id", DietLog.class)
+                .setParameter("id", room.getId())
+                .getSingleResult();
+        System.out.println("singleResult.getId() = " + singleResult.getId());
+    }
 
     @Test
     void getDietLogsTest() {
