@@ -2,6 +2,8 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.Cat;
 import com.appledeveloperacademy.MC2Server.domain.Coordinate;
+import com.appledeveloperacademy.MC2Server.domain.Invitation;
+import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
 import com.appledeveloperacademy.MC2Server.domain.enums.Gender;
 import com.appledeveloperacademy.MC2Server.dto.CatInfoDto;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
@@ -16,20 +18,13 @@ import java.util.List;
 public class RoomServiceMock implements RoomService {
 
     @Override
-    public InvitationCodeDto findInvitationCodeByRoomId(Long roomId) {
-        return new InvitationCodeDto("123456");
+    public Invitation findInvitationCodeByRoomId(Long roomId) {
+        return null;
     }
 
     @Override
-    public List<ParticipatingRoomDto> findAllParticipatingRooms(Long userId) {
-        List<ParticipatingRoomDto> dtos = new ArrayList<>();
-        ParticipatingRoomDto roomDto1 = new ParticipatingRoomDto(0L, 0L, new CatInfoDto(0L, 5, "나비", Gender.MALE.name(), true, "페르시안", "https://aaa.bbb.ccc", "https://aaa.bbb.ccc", new Coordinate(20L, 10L)));
-        ParticipatingRoomDto roomDto2 = new ParticipatingRoomDto(1L, 1L, new CatInfoDto(1L, 6, "치즈", Gender.FEMALE.name(), false, "코숏", "https://aaa.bbb.ccc", "https://aaa.bbb.ccc", new Coordinate(10L, 20L)));
-        ParticipatingRoomDto roomDto3 = new ParticipatingRoomDto(2L, 2L, new CatInfoDto(2L, 7, "얼룩이", Gender.FEMALE.name(), false, "코숏", "https://aaa.bbb.ccc", "https://aaa.bbb.ccc", new Coordinate(70L, 20L)));
-        dtos.add(roomDto1);
-        dtos.add(roomDto2);
-        dtos.add(roomDto3);
-        return dtos;
+    public List<MemberRoom> findAllParticipatingRooms(Long userId) {
+        return null;
     }
 
     @Override

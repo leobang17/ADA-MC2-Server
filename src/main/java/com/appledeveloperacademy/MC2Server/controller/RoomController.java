@@ -1,6 +1,8 @@
 package com.appledeveloperacademy.MC2Server.controller;
 
 import com.appledeveloperacademy.MC2Server.domain.Cat;
+import com.appledeveloperacademy.MC2Server.domain.Invitation;
+import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
 import com.appledeveloperacademy.MC2Server.dto.CatInfoDto;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import com.appledeveloperacademy.MC2Server.dto.ParticipatingRoomDto;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/rooms")
 @RestController
@@ -23,8 +26,10 @@ public class RoomController {
     @GetMapping
     public ResponseEntity<ListedResult<ParticipatingRoomDto>> getAllRooms() {
         Long userId = 1L;
-        List<ParticipatingRoomDto> rooms = roomService.findAllParticipatingRooms(userId);
-        return ResponseEntity.ok(new ListedResult<>(rooms));
+        List<MemberRoom> rooms = roomService.findAllParticipatingRooms(userId);
+        List<ParticipatingRoomDto> collect = rooms.stream().map(ParticipatingRoomDto::build)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new ListedResult<>(collect));
     }
 
     // Create a new room
@@ -36,8 +41,9 @@ public class RoomController {
     // Check if invitation code exists to specific room.
     @GetMapping("/{roomId}/invitation-codes")
     public ResponseEntity<InvitationCodeDto> checkInvitation(@PathVariable final Long roomId) {
-        InvitationCodeDto invitation = roomService.findInvitationCodeByRoomId(roomId);
-        return ResponseEntity.ok(invitation);
+        Invitation invitation = roomService.findInvitationCodeByRoomId(roomId);
+        InvitationCodeDto buildDto = InvitationCodeDto.build(invitation);
+        return ResponseEntity.ok(buildDto);
     }
 
     // Create invitation codes for a particular room

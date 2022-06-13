@@ -45,4 +45,9 @@ public class Member extends CreationModificationLog {
         this.usercode = usercode;
         this.username = username;
     }
+
+    public void addMemberRoom(MemberRoom memberRoom) {
+        memberRoom.setMember(this);
+        this.memberRooms.add(memberRoom);
+    }
 }

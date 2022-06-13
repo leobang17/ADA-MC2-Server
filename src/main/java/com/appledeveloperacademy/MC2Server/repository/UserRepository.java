@@ -17,7 +17,6 @@ public class UserRepository {
 
     public void save(Member member) {
         em.persist(member);
-        em.flush();
     }
 
     public Member findById(Long userId) {
