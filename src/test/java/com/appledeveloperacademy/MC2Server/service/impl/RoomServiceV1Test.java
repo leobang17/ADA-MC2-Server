@@ -187,4 +187,30 @@ class RoomServiceV1Test {
 
         assertEquals(invitation, findRoom.getInvitation());
     }
+
+    @Test
+    void participateRoomTest() {
+        // given
+        Member member = new Member();
+        Room room = new Room();
+        CreateCatReq createCatReq = new CreateCatReq();
+        createCatReq.setGender("MALE");
+        createCatReq.setAge(3);
+        Cat cat = new Cat(createCatReq);
+
+        em.persist(member);
+        em.persist(room);
+        em.flush();
+
+        // when
+        Long memberRoomId = roomService.participateRoom(member.getId(), room.getId(), createCatReq);
+        System.out.println("memberRoomId = " + memberRoomId);
+        MemberRoom memberRoom = em.find(MemberRoom.class, memberRoomId);
+        Cat cat1 = memberRoom.getCat();
+
+        // then
+        assertEquals(member,memberRoom.getMember());
+        assertEquals(room, memberRoom.getRoom());
+        assertEquals(cat.getGender(), cat1.getGender());
+    }
 }

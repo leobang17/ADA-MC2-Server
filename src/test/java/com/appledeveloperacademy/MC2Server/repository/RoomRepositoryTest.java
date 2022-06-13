@@ -29,7 +29,7 @@ class RoomRepositoryTest {
         Member member = new Member();
         Cat cat = new Cat();
         Room room = new Room();
-        MemberRoom memberRoom = MemberRoom.createMemberRoom(member, cat, room);
+        MemberRoom memberRoom = MemberRoom.createMemberRoom(member, room, cat);
         room.addMemberRoom(memberRoom);
 
         em.flush();
