@@ -55,4 +55,9 @@ public class RoomServiceMock implements RoomService {
     public Long createInvitation(Long roomId) {
         return null;
     }
+
+    @Override
+    public Long participateRoom(Long userId, Long roomId, CreateCatReq createCatReq) {
+        return null;
+    }
 }

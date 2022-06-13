@@ -73,7 +73,8 @@ public class RoomRepository {
         em.persist(invitation);
     }
 
-
-
+    public void createMemberRoom(MemberRoom memberRoom) {
+        em.persist(memberRoom);
+    }
 
 }

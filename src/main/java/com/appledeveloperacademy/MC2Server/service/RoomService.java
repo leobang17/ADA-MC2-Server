@@ -22,4 +22,6 @@ public interface RoomService {
     Long createRoom(Long userId, CreateCatReq createCatReq);
 
     Long createInvitation(Long roomId);
+
+    Long participateRoom(Long userId, Long roomId, CreateCatReq createCatReq);
 }

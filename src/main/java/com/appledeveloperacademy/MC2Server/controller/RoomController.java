@@ -66,7 +66,10 @@ public class RoomController {
     @PostMapping("/{roomId}/users")
     public String participateRoom(
             @PathVariable final Long roomId,
-            @RequestBody final CatInfoDto catInfoDto) {
+            @RequestBody final CreateCatReq createCatReq) {
+        Long userId = 0L;
+
+
         return "participateRoom";
     }
 

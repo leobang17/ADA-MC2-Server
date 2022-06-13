@@ -1,21 +1,18 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.*;
-import com.appledeveloperacademy.MC2Server.dto.CatInfoDto;
-import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.UUID;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -24,7 +21,6 @@ import java.util.UUID;
 public class RoomServiceV1 implements RoomService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
-    private final EntityManager em;
 
 
     @Override
@@ -53,10 +49,24 @@ public class RoomServiceV1 implements RoomService {
         // create instances
         Room room = new Room();
         Cat cat = new Cat(createCatReq);
-        MemberRoom memberRoom = MemberRoom.createMemberRoom(findUser, cat, room);
+        MemberRoom memberRoom = MemberRoom.createMemberRoom(findUser, room, cat);
 
         // persist
         roomRepository.createRoom(room);
+
+        return memberRoom.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long participateRoom(Long userId, Long roomId, CreateCatReq createCatReq) {
+        Member findUser = userRepository.findById(userId);
+        Room findRoom = roomRepository.findRoomByRoomId(roomId);
+
+        Cat cat = new Cat(createCatReq);
+        MemberRoom memberRoom = MemberRoom.createMemberRoom(findUser, findRoom, cat);
+
+        roomRepository.createMemberRoom(memberRoom);
 
         return memberRoom.getId();
     }

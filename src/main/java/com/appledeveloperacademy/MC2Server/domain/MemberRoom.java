@@ -38,7 +38,7 @@ public class MemberRoom extends MemberRoomIntermediate {
         return memberRoom;
     }
 
-    public static MemberRoom createMemberRoom(Member member, Cat cat, Room room) {
+    public static MemberRoom createMemberRoom(Member member, Room room, Cat cat) {
         MemberRoom memberRoom = new MemberRoom();
         // connect with cat
         memberRoom.addCat(cat);
