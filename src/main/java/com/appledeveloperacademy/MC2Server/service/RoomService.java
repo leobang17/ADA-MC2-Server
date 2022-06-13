@@ -20,4 +20,6 @@ public interface RoomService {
     Cat findCatByCatId(Long catId);
 
     Long createRoom(Long userId, CreateCatReq createCatReq);
+
+    Long createInvitation(Long roomId);
 }

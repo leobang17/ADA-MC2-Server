@@ -13,7 +13,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,6 +24,7 @@ import java.util.List;
 public class RoomServiceV1 implements RoomService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final EntityManager em;
 
 
     @Override
@@ -42,6 +45,7 @@ public class RoomServiceV1 implements RoomService {
     }
 
     @Override
+    @Transactional
     public Long createRoom(Long userId, CreateCatReq createCatReq) {
         // fetch user by id
         Member findUser = userRepository.findById(userId);
@@ -56,4 +60,43 @@ public class RoomServiceV1 implements RoomService {
 
         return memberRoom.getId();
     }
+
+    @Override
+    @Transactional
+    public Long createInvitation(Long roomId) {
+        // get room by roomId
+        Room room = roomRepository.findRoomByRoomId(roomId);
+
+        // check if room has invitation
+        Invitation invitation = room.getInvitation();
+
+        if (invitation != null) {
+            if (!invitation.isExpired()) {
+                // invitation exists and invitation is still available.
+                // Do: throw Error
+
+            } else {
+                // invitation exists but invitation is expired.
+                // Do: Delete invitation
+                roomRepository.removeInvitation(invitation);
+            }
+        }
+
+        // Invitation doesn't exist or is expired
+        // Do: Create Invitation
+        String code;
+        do {
+            code = Invitation.generateCode();
+        } while (roomRepository.getInvitationByCode(code).size() > 0);
+
+        Invitation createdInvitation = new Invitation(code);
+        room.addInvitation(createdInvitation);
+
+        // Persist created invitation -> createdInvitation.getId()를 return하기 위해서는 persistence context에 올려야함.
+        roomRepository.createInvitation(createdInvitation);
+
+        return createdInvitation.getId();
+    }
+
+
 }

@@ -23,13 +23,13 @@ public class RoomRepository {
         // service 에서 room.addMemberRoom  (MemberRoom은 cat이랑 member 서로 연결되어있는 상태)
     }
 
-    public Invitation getInvitationByCode(String invitationCode) {
+    public List<Invitation> getInvitationByCode(String invitationCode) {
         return em.createQuery(
                         "Select i" +
                                 " FROM Invitation i" +
                                 " WHERE i.code = :code", Invitation.class)
                 .setParameter("code", invitationCode)
-                .getSingleResult();
+                .getResultList();
     }
 
     public Invitation getInvitationByRoomId(Long roomId) {
@@ -56,6 +56,22 @@ public class RoomRepository {
                 .getResultList();
     }
 
+    public Room findRoomByRoomId(Long roomId) {
+        return em.createQuery(
+                        "SELECT r" +
+                                " FROM Room r" +
+                                " WHERE r.id = :id", Room.class)
+                .setParameter("id", roomId)
+                .getSingleResult();
+    }
+
+    public void removeInvitation(Invitation invitation) {
+        em.remove(invitation);
+    }
+
+    public void createInvitation(Invitation invitation) {
+        em.persist(invitation);
+    }
 
 
 

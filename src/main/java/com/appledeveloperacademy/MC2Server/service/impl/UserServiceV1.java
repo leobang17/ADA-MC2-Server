@@ -49,13 +49,4 @@ public class UserServiceV1 implements UserService {
 
         return member.getId();
     }
-
-    private String generateUsercode() {
-        Random random = new Random();
-        String randomCode = "";
-        for (int i = 0; i < 6; i++) {
-            randomCode += Integer.toString(random.nextInt(10));
-        }
-        return randomCode;
-    }
 }

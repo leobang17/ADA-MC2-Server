@@ -10,12 +10,14 @@ import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import com.appledeveloperacademy.MC2Server.dto.ParticipatingRoomDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Qualifier(value = "roomServiceMock")
 public class RoomServiceMock implements RoomService {
 
     @Override
@@ -46,6 +48,11 @@ public class RoomServiceMock implements RoomService {
     public Long createRoom(Long userId, CreateCatReq createCatReq) {
         // userid + catInfoDto로 Room 생성 + MemberRoom 생성  -> 연결
         // Cat 생성 + room 과 연결.L
+        return null;
+    }
+
+    @Override
+    public Long createInvitation(Long roomId) {
         return null;
     }
 }

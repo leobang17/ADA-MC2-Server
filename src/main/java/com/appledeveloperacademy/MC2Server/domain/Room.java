@@ -19,7 +19,7 @@ public class Room extends CreationModificationLog {
     @Column(name = "room_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "invitation_id")
     private Invitation invitation;
 
@@ -44,6 +44,11 @@ public class Room extends CreationModificationLog {
     public void addMemberRoom(MemberRoom memberRoom) {
         memberRooms.add(memberRoom);
         memberRoom.setRoom(this);
+    }
+
+    public void addInvitation(Invitation invitation) {
+        invitation.setRoom(this);
+        this.setInvitation(invitation);
     }
 
     public static Room createRoom(MemberRoom memberRoom, Cat cat) {

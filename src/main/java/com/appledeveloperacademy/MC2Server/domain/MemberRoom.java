@@ -16,15 +16,15 @@ public class MemberRoom extends MemberRoomIntermediate {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cat")
+    @JoinColumn(name = "cat_id")
     private Cat cat;
 
     @Enumerated(value = EnumType.STRING)

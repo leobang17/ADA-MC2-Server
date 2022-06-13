@@ -11,6 +11,7 @@ import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +21,13 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/api/rooms")
 @RestController
-@RequiredArgsConstructor
 public class RoomController {
 
     private final RoomService roomService;
+
+    public RoomController(@Qualifier(value = "roomServiceV1") RoomService roomService) {
+        this.roomService = roomService;
+    }
 
     // List all rooms managed by a user
     @GetMapping
@@ -40,7 +44,7 @@ public class RoomController {
     public ResponseEntity createRoom(@RequestBody CreateCatReq createCatReq) {
         Long userId = 1L;
         Long roomid = roomService.createRoom(userId, createCatReq);
-        return ResponseEntity.created(URI.create("/users/" + userId.toString() + "/rooms/" + roomid.toString())).build();
+        return ResponseEntity.created(URI.create("/users/" + userId + "/rooms/" + roomid)).build();
     }
 
     // Check if invitation code exists to specific room.
@@ -53,8 +57,9 @@ public class RoomController {
 
     // Create invitation codes for a particular room
     @PostMapping("/{roomId}/invitation-codes")
-    public String createInvitation(@PathVariable final Long roomId) {
-        return "createInvitation";
+    public ResponseEntity createInvitation(@PathVariable final Long roomId) {
+        Long invitationId = roomService.createInvitation(roomId);
+        return ResponseEntity.created(URI.create("/rooms/" + roomId  +"/invitation-codes/" + invitationId)).build();
     }
 
     // Add new user to an existing room
