@@ -1,7 +1,9 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.*;
+import com.appledeveloperacademy.MC2Server.domain.enums.Gender;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,27 @@ class RoomServiceV1Test {
     EntityManager em;
     @Autowired
     RoomServiceV1 roomService;
+
+    @Test
+    void createRoomTest() {
+        // given
+        Member member = new Member();
+        CreateCatReq createCatReq = new CreateCatReq();
+        createCatReq.setGender("FEMALE");
+        createCatReq.setAge(3);
+
+        // when
+        em.persist(member);
+        System.out.println("아이디는 " + member.getId());
+        Long room = roomService.createRoom(member.getId(), createCatReq);
+
+        em.flush();
+        MemberRoom room1 = em.find(MemberRoom.class, room);
+
+        // then
+        assertEquals(member, room1.getMember());
+        assertEquals(Gender.FEMALE, room1.getCat().getGender());
+    }
 
     @Test
     void findInvitationCodeByRoomId() {

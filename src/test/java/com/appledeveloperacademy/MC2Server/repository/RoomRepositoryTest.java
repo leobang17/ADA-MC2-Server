@@ -1,6 +1,7 @@
 package com.appledeveloperacademy.MC2Server.repository;
 
 import com.appledeveloperacademy.MC2Server.domain.*;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,58 @@ class RoomRepositoryTest {
 
     @Autowired EntityManager em;
     @Autowired RoomRepository roomRepository;
+    @Autowired UserRepository userRepository;
+
+    @Test
+    void createRoomTest() {
+        Member member = new Member();
+        Cat cat = new Cat();
+        Room room = new Room();
+        MemberRoom memberRoom = MemberRoom.createMemberRoom(member, cat, room);
+        room.addMemberRoom(memberRoom);
+
+        em.flush();
+        roomRepository.createRoom(room);
+
+        MemberRoom memberRoom1 = em.find(MemberRoom.class, memberRoom.getId());
+        assertEquals(member, memberRoom1.getMember());
+        assertEquals(cat, memberRoom1.getCat());
+        assertEquals(room, memberRoom1.getRoom());
+    }
+
+    @Test
+    void createRoomTestV1() {
+        // find member
+        Member member = new Member();
+        em.persist(member);
+
+        Member findUser = userRepository.findById(member.getId());
+        System.out.println("유저 이이디" + findUser.getId());
+
+        // create instances
+        Room room = new Room();
+        Cat cat = new Cat();
+        MemberRoom memberRoom = new MemberRoom();
+
+        // connect
+        memberRoom.setRoom(room);
+        room.getMemberRooms().add(memberRoom);
+        member.addMemberRoom(memberRoom);
+
+        memberRoom.setCat(cat);
+        cat.setMemberRoom(memberRoom);
+
+        // persist & flush
+//        em.persist(memberRoom);
+//        em.persist(cat);
+        em.persist(room);
+        em.flush();
+
+        MemberRoom memberRoom1 = em.find(MemberRoom.class, memberRoom.getId());
+        assertEquals(memberRoom1.getRoom(), room);
+        assertEquals(memberRoom1.getCat(), cat);
+        assertEquals(memberRoom1.getMember(), member);
+    }
 
     @Test
     void getMemberRooms() {
