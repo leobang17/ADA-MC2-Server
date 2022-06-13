@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @SpringBootTest
 class RoomServiceV1Test {
-    @Autowired
-    EntityManager em;
-    @Autowired
-    RoomServiceV1 roomService;
+    @Autowired EntityManager em;
+    @Autowired RoomServiceV1 roomService;
+
+    @Autowired RoomRepository roomRepository;
 
     @Test
     void createRoomTest() {
@@ -108,5 +109,82 @@ class RoomServiceV1Test {
 
         // then
         assertEquals(cat, catByCatId);
+    }
+
+    @Test
+    void invitationNullTest() {
+        // given
+        Invitation invitation = new Invitation();
+        Room room = new Room();
+        Room room2 = new Room();
+        room.setInvitation(invitation);
+        invitation.setRoom(room);
+
+
+        em.persist(room);
+        em.persist(room2);
+
+        // when
+        em.flush();
+
+        Room room1 = em.find(Room.class, room.getId());
+        Room room3 = em.find(Room.class, room2.getId());
+
+        // then
+        assertEquals(invitation, room1.getInvitation());
+        assertNull(room3.getInvitation());
+    }
+
+    @Test
+    void createInvitationTest() {
+        // given
+        Room room = new Room();
+        em.persist(room);
+
+        // when
+        Long invitationCode = roomService.createInvitation(room.getId());
+        em.flush();
+
+        Room room1 = em.find(Room.class, room.getId());
+        Invitation invitation = em.find(Invitation.class, invitationCode);
+
+        // then
+        assertEquals(invitation, room1.getInvitation());
+    }
+
+    @Test
+    void createInvitationTest_expired() {
+        // given
+        Room room = new Room();
+        Invitation invitation = new Invitation();
+        invitation.setExpiredAt(LocalDateTime.now().minusDays(1));
+        room.addInvitation(invitation);
+        em.persist(room);
+
+        // when
+        Long invitation2 = roomService.createInvitation(room.getId());
+
+        em.flush();
+
+        Room room1 = em.find(Room.class, room.getId());
+        Invitation invitation3 = em.find(Invitation.class, invitation2);
+        em.flush();
+
+        // then
+        Invitation invitation1 = room1.getInvitation();
+        assertEquals(invitation1, invitation3);
+    }
+
+    @Test
+    void createInivtationTestV2() {
+        Room room = new Room();
+        Invitation invitation = new Invitation();
+        room.addInvitation(invitation);
+        em.persist(room);
+
+        Room findRoom = em.find(Room.class, room.getId());
+
+
+        assertEquals(invitation, findRoom.getInvitation());
     }
 }

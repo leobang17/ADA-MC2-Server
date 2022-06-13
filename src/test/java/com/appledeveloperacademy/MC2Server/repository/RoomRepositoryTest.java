@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -86,6 +87,33 @@ class RoomRepositoryTest {
     }
 
     @Test
+    void invitationRemovalTest() {
+        // given
+        Invitation invitation = new Invitation();
+        Room room = new Room();
+        invitation.setRoom(room);
+        room.setInvitation(invitation);
+
+        em.persist(room);
+
+        // when
+//        em.flush();
+
+//        roomRepository.removeInvitation(invitation);
+//        em.remove(invitation);
+        int id = em.createQuery("DELETE FROM Invitation i WHERE i.id = :id").setParameter("id", invitation.getId()).executeUpdate();
+
+//        em.flush();
+        Room room1 = em.find(Room.class, room.getId());
+        Invitation invitation1 = em.find(Invitation.class, invitation.getId());
+
+        // then
+        assertNull(room1.getInvitation());
+//        assertNull(invitation1);
+
+    }
+
+    @Test
     void getInvitationByCode() {
         // given
         Invitation invitation = new Invitation();
@@ -93,10 +121,10 @@ class RoomRepositoryTest {
         em.persist(invitation);
 
         // when
-        Invitation invitationByCode = roomRepository.getInvitationByCode("123456");
+        List<Invitation> invitationByCode = roomRepository.getInvitationByCode("123456");
 
         // then
-        assertEquals(invitation, invitationByCode);
+        assertEquals(invitation, invitationByCode.get(0));
 
     }
 
