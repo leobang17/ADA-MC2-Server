@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -22,7 +23,7 @@ public class MemberRoom extends MemberRoomIntermediate {
     @JoinColumn(name = "room")
     private Room room;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cat")
     private Cat cat;
 
@@ -32,11 +33,29 @@ public class MemberRoom extends MemberRoomIntermediate {
     public static MemberRoom createMemberRoom(Member member) {
         MemberRoom memberRoom = new MemberRoom();
         memberRoom.setMember(member);
+        List<MemberRoom> memberRooms = member.getMemberRooms();
+        memberRooms.add(memberRoom);
+        return memberRoom;
+    }
+
+    public static MemberRoom createMemberRoom(Member member, Cat cat, Room room) {
+        MemberRoom memberRoom = new MemberRoom();
+        // connect with cat
+        memberRoom.addCat(cat);
+        // connect with member
+        member.addMemberRoom(memberRoom);
+        // connect with room
+        room.addMemberRoom(memberRoom);
         return memberRoom;
     }
 
     public void addCat(Cat cat) {
         cat.setMemberRoom(this);
         this.setCat(cat);
+    }
+
+    private void addMember(Member member) {
+        this.setMember(member);
+        member.getMemberRooms().add(this);
     }
 }

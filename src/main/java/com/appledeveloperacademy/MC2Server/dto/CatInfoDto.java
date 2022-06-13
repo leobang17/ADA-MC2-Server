@@ -8,12 +8,14 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Data
 @Getter @Setter
 @AllArgsConstructor
 public class CatInfoDto {
     private Long id;
-    private int age;
+    private LocalDateTime birth;
     private String name;
     private String gender;
     private boolean neutralized;
@@ -24,7 +26,7 @@ public class CatInfoDto {
 
     public CatInfoDto(Cat cat) {
         this.id = cat.getId();
-        this.age = cat.getAge();
+        this.birth = cat.getBirth();
         this.name = cat.getName();
         this.neutralized = cat.isNeutralized();
         this.gender = cat.getGender().name();

@@ -8,6 +8,7 @@ import com.appledeveloperacademy.MC2Server.domain.enums.Gender;
 import com.appledeveloperacademy.MC2Server.dto.CatInfoDto;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import com.appledeveloperacademy.MC2Server.dto.ParticipatingRoomDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,6 @@ public class RoomServiceMock implements RoomService {
     public Cat findCatByCatId(Long catId) {
         Cat cat = new Cat();
         cat.setId(1L);
-        cat.setAge(12);
         cat.setCoordinate(new Coordinate(10L, 20L));
         cat.setName("초코");
         cat.setNeutralized(true);
@@ -40,5 +40,12 @@ public class RoomServiceMock implements RoomService {
         cat.setMainImgUrl("https://aaa.bbb.ccc");
         cat.setProfileImgUrl("https://aaa.bbb.ccc");
         return cat;
+    }
+
+    @Override
+    public Long createRoom(Long userId, CreateCatReq createCatReq) {
+        // userid + catInfoDto로 Room 생성 + MemberRoom 생성  -> 연결
+        // Cat 생성 + room 과 연결.L
+        return null;
     }
 }

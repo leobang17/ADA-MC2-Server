@@ -3,15 +3,18 @@ package com.appledeveloperacademy.MC2Server.controller;
 import com.appledeveloperacademy.MC2Server.domain.Cat;
 import com.appledeveloperacademy.MC2Server.domain.Invitation;
 import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
+import com.appledeveloperacademy.MC2Server.domain.log.Log;
 import com.appledeveloperacademy.MC2Server.dto.CatInfoDto;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import com.appledeveloperacademy.MC2Server.dto.ParticipatingRoomDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +37,10 @@ public class RoomController {
 
     // Create a new room
     @PostMapping
-    public String createRoom(@RequestBody CatInfoDto catInfoDto) {
-        return "createRoom";
+    public ResponseEntity createRoom(@RequestBody CreateCatReq createCatReq) {
+        Long userId = 1L;
+        Long roomid = roomService.createRoom(userId, createCatReq);
+        return ResponseEntity.created(URI.create("/users/" + userId.toString() + "/rooms/" + roomid.toString())).build();
     }
 
     // Check if invitation code exists to specific room.
