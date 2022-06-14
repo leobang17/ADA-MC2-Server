@@ -5,6 +5,7 @@ import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
 import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
@@ -192,6 +193,28 @@ class LogServiceV1Test {
         // then
         assertNotNull(dietLog2);
         assertNotNull(dietLog3);
+    }
+
+    @Test
+    void createWaterLogTest() {
+        // given
+        Member member = new Member();
+        Room room = new Room();
+        em.persist(member);
+        em.persist(room);
+
+        em.flush();
+
+        // when
+        Long waterLog = logServiceV1.createWaterLog(member.getId(), room.getId(), new CreateWaterReq());
+        Long waterLog1 = logServiceV1.createWaterLog(member.getId(), room.getId(), new CreateWaterReq());
+
+        WaterLog waterLog2 = em.find(WaterLog.class, waterLog);
+        WaterLog waterLog3 = em.find(WaterLog.class, waterLog1);
+
+        // then
+        assertNotNull(waterLog2);
+        assertNotNull(waterLog3);
     }
 
 
