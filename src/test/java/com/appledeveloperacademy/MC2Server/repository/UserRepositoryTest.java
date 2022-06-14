@@ -38,6 +38,7 @@ class UserRepositoryTest {
 
         // then
         assertEquals(member, byId);
+        System.out.println("byId.getCreatedAt() = " + byId.getCreatedAt());
     }
 
     @Test

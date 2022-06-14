@@ -46,6 +46,7 @@ class LogRepositoryTest {
 
         // then
         assertEquals(member, dietLogByRoomId.getMember());
+        System.out.println("dietLogByRoomId.getCreatedAt() = " + dietLogByRoomId.getCreatedAt());
     }
 
     @Test
@@ -64,7 +65,6 @@ class LogRepositoryTest {
                                 " WHERE r.id = :id", DietLog.class)
                 .setParameter("id", room.getId())
                 .getSingleResult();
-        System.out.println("singleResult.getId() = " + singleResult.getId());
     }
 
     @Test
