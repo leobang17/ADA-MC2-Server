@@ -5,6 +5,7 @@ import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
 import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
@@ -276,5 +277,27 @@ class LogServiceV1Test {
         assertEquals(member, member1);
         assertEquals(dietLog, dietLog1);
         assertEquals(room, room1);
+    }
+
+    @Test
+    void createMemoLogTest() {
+        // given
+        Member member = new Member();
+        Room room = new Room();
+
+        em.persist(member);
+        em.persist(room);
+        em.flush();
+
+        CreateMemoReq createMemoReq = new CreateMemoReq();
+        createMemoReq.setContent("안녕하세요!");
+
+        // when
+        Long memoLog = logServiceV1.createMemoLog(member.getId(), room.getId(), createMemoReq);
+        MemoLog memoLog1 = em.find(MemoLog.class, memoLog);
+
+        // then
+        assertEquals("안녕하세요!", memoLog1.getContent());
+
     }
 }
