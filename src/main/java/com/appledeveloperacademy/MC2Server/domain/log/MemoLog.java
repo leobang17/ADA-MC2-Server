@@ -12,7 +12,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "M")
 @Getter @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class MemoLog extends Log {
     private String content;
+
+    public MemoLog() {
+        super.setPublic(false);
+    }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class LogServiceMock implements LogService {
 
     @Override
-    public List<DietLog> getDietLogs(Long userId, Long roomId, boolean isPrivate) {
+    public List<DietLog> getDietLogs(Long userId, Long roomId, boolean isPrivate, int limit, int offset) {
         DietLog log1 = dietLogBuilder(1L, "개밥", 10, true, 0L, "Leo");
         DietLog log2 = dietLogBuilder(2L, "고양이밥", 50, true, 1L, "Bang");
         DietLog log3 = dietLogBuilder(3L, "런천미트", 100, false, 1L, "Bang");
@@ -30,7 +30,7 @@ public class LogServiceMock implements LogService {
     }
 
     @Override
-    public List<WaterLog> getWaterLogs(Long userId, Long roomId, boolean isPrivate) {
+    public List<WaterLog> getWaterLogs(Long userId, Long roomId, boolean isPrivate, int limit, int offset) {
         WaterLog log1 = waterLogBuilder(1L, 10, true, 0L, "Leo");
         WaterLog log2 = waterLogBuilder(2L, 50, true, 1L, "Bang");
         WaterLog log3 = waterLogBuilder(3L, 100, false, 1L, "Bang");
@@ -42,7 +42,7 @@ public class LogServiceMock implements LogService {
     }
 
     @Override
-    public List<HealthLog> getHealthLogs(Long userId, Long roomId, boolean isPrivate) {
+    public List<HealthLog> getHealthLogs(Long userId, Long roomId, boolean isPrivate, int limit, int offset) {
         List<HealthLog> logs = new ArrayList<>();
         HealthLog log1 = healthLogBuilder(0L, "몸이 아파요", HealthLogAction.ACTIVATE, true, 0L, "leo");
         HealthLog log2 = healthLogBuilder(1L, "눈이 빨개요.", HealthLogAction.ACTIVATE, true, 0L, "leo");
@@ -54,7 +54,7 @@ public class LogServiceMock implements LogService {
     }
 
     @Override
-    public List<MemoLog> getMemoLogs(Long userId, Long roomId, boolean isPrivate) {
+    public List<MemoLog> getMemoLogs(Long userId, Long roomId, boolean isPrivate, int limit, int offset) {
         List<MemoLog> logs = new ArrayList<>();
         MemoLog log1 = memoLogBuilder(0L, "어제 밥을 줬다", true, 0L, "leo");
         MemoLog log2 = memoLogBuilder(1L, "고롱고롱송을 부른다", true, 1L, "bang");

@@ -47,6 +47,16 @@ public class RoomController {
         return ResponseEntity.created(URI.create("/users/" + userId + "/rooms/" + roomid)).build();
     }
 
+    // Add new user to an existing room
+    @PostMapping("/{roomId}/users")
+    public ResponseEntity participateRoom(
+            @PathVariable final Long roomId,
+            @RequestBody final CreateCatReq createCatReq) {
+        Long userId = 0L;
+        Long memberRoomId = roomService.participateRoom(userId, roomId, createCatReq);
+        return ResponseEntity.created(URI.create("/users/" + userId + "/rooms/" + memberRoomId)).build();
+    }
+
     // Check if invitation code exists to specific room.
     @GetMapping("/{roomId}/invitation-codes")
     public ResponseEntity<InvitationCodeDto> checkInvitation(@PathVariable final Long roomId) {
@@ -60,17 +70,6 @@ public class RoomController {
     public ResponseEntity createInvitation(@PathVariable final Long roomId) {
         Long invitationId = roomService.createInvitation(roomId);
         return ResponseEntity.created(URI.create("/rooms/" + roomId  +"/invitation-codes/" + invitationId)).build();
-    }
-
-    // Add new user to an existing room
-    @PostMapping("/{roomId}/users")
-    public String participateRoom(
-            @PathVariable final Long roomId,
-            @RequestBody final CreateCatReq createCatReq) {
-        Long userId = 0L;
-
-
-        return "participateRoom";
     }
 
     // Merge a room to another room

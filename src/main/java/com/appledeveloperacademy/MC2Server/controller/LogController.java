@@ -40,7 +40,7 @@ public class LogController {
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
-        List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate);
+        List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate, limit, offset);
         List<DietLogDto> collect = dietLogs.stream().map(DietLogDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }
@@ -51,6 +51,8 @@ public class LogController {
             @PathVariable final Long roomId,
             @RequestBody final DietInputDto dietInputDto
     ) {
+        final Long userId = 0L;
+
         return "createDiets";
     }
 
@@ -63,7 +65,7 @@ public class LogController {
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
-        List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate);
+        List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate, limit, offset);
         List<WaterLogDto> collect = waterLogs.stream().map(WaterLogDto::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
@@ -87,7 +89,7 @@ public class LogController {
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
-        List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate);
+        List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate, limit, offset);
         List<HealthLogDto> collect = healthLogs.stream().map(HealthLogDto::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
@@ -111,7 +113,7 @@ public class LogController {
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = 0L;
-        List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate);
+        List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate, limit, offset);
         List<MemoLogDto> collect = memoLogs.stream().map(MemoLogDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @DiscriminatorValue(value = "H")
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class HealthLog extends Log {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "health_tag_id")
