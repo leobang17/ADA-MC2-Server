@@ -5,6 +5,7 @@ import com.appledeveloperacademy.MC2Server.domain.log.HealthLog;
 import com.appledeveloperacademy.MC2Server.domain.log.MemoLog;
 import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
 import com.appledeveloperacademy.MC2Server.dto.log.*;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class LogController {
     @PostMapping("/{roomId}/diets")
     public String createDiets(
             @PathVariable final Long roomId,
-            @RequestBody final DietInputDto dietInputDto
+            @RequestBody final CreateDietReq createDietReq
     ) {
         final Long userId = 0L;
 
@@ -133,12 +134,6 @@ public class LogController {
             @PathVariable final Long roomId
     ) {
         return "increaseSnacks";
-    }
-
-    static class DietInputDto {
-        private LocalDateTime time;
-        private String type;
-        private int amount;
     }
 
     static class WaterInputDto {

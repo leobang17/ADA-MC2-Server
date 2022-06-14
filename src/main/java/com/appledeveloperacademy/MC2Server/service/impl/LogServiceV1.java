@@ -1,15 +1,21 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
+import com.appledeveloperacademy.MC2Server.domain.Member;
+import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
+import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
+import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LogServiceV1 implements LogService{
     private final LogRepository logRepository;
+    private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
 
     @Override
     public List<DietLog> getDietLogs(Long userId, Long roomId, boolean isPrivate, int limit, int offset) {
@@ -47,5 +55,18 @@ public class LogServiceV1 implements LogService{
     @Override
     public SummerizedLogDto getSummerizedLogs(Long userId, Long roomId, boolean isPrivate) {
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Long createDietLog(Long userId, Long roomId, CreateDietReq createDietReq) {
+        Member member = userRepository.findById(userId);
+        Room room = roomRepository.findRoomByRoomId(roomId);
+
+        DietLog dietLog = createDietReq.buildLog();
+        dietLog.writeLog(member, room);
+
+        logRepository.flush();
+        return dietLog.getId();
     }
 }

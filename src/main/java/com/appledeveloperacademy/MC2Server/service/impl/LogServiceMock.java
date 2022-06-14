@@ -5,6 +5,7 @@ import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.domain.enums.HealthLogAction;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,11 @@ public class LogServiceMock implements LogService {
         healthDtos.add(healthDto);
 
         return new SummerizedLogDto(dietDto, waterDto, snackDto, healthDtos, memoDtos);
+    }
+
+    @Override
+    public Long createDietLog(Long userId, Long roomId, CreateDietReq createDietReq) {
+        return null;
     }
 
     private DietLog dietLogBuilder(Long logId, String dietName, int dietAmount, boolean isPublic, Long memberId, String username) {

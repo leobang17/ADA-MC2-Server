@@ -3,6 +3,7 @@ package com.appledeveloperacademy.MC2Server.service;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.HealthLogDto;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,5 +19,7 @@ public interface LogService {
     List<MemoLog> getMemoLogs(Long userId, Long roomId, boolean isPrivate, int limit, int offset);
 
     SummerizedLogDto getSummerizedLogs(Long userId, Long roomId, boolean isPrivate);
+
+    Long createDietLog(Long userId, Long roomId, CreateDietReq createDietReq);
 
 }
