@@ -4,6 +4,7 @@ import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
 import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
@@ -171,6 +172,28 @@ class LogServiceV1Test {
         assertEquals(2, healthLogs.size());
     }
 
+    @Test
+    void createDietLogTest() {
+        // given
+        Member member = new Member();
+        Room room = new Room();
+        em.persist(member);
+        em.persist(room);
+
+        em.flush();
+
+        // when
+        Long dietLog = logServiceV1.createDietLog(member.getId(), room.getId(), new CreateDietReq());
+        Long dietLog1 = logServiceV1.createDietLog(member.getId(), room.getId(), new CreateDietReq());
+
+        DietLog dietLog2 = em.find(DietLog.class, dietLog);
+        DietLog dietLog3 = em.find(DietLog.class, dietLog1);
+
+        // then
+        assertNotNull(dietLog2);
+        assertNotNull(dietLog3);
+    }
+
 
 
     @Test
@@ -207,7 +230,7 @@ class LogServiceV1Test {
     @Test
     void getSummerizedLogs() {
 
-        
+
     }
 
 
