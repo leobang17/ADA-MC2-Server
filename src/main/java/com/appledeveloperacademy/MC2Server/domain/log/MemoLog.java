@@ -16,6 +16,6 @@ public class MemoLog extends Log {
     private String content;
 
     public MemoLog() {
-        super.setPublic(false);
+        this.setPublic(false);
     }
 }

@@ -6,6 +6,7 @@ import com.appledeveloperacademy.MC2Server.domain.log.MemoLog;
 import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
 import com.appledeveloperacademy.MC2Server.dto.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
@@ -127,8 +128,9 @@ public class LogController {
     @PostMapping("/{roomId}/memos")
     public String createMemos(
             @PathVariable final Long roomId,
-            @RequestBody final MemoInputDto memoInputDto
+            @RequestBody final CreateMemoReq createMemoReq
     ) {
+
         return "createMemos";
     }
 
@@ -144,10 +146,5 @@ public class LogController {
     static class HealthInputDto {
         private List<String> health;
     }
-
-    static class MemoInputDto {
-        private String content;
-    }
-
 }
 

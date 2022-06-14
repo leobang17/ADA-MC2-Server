@@ -5,6 +5,7 @@ import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
@@ -81,5 +82,19 @@ public class LogServiceV1 implements LogService{
 
         logRepository.flush();
         return waterLog.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long createMemoLog(Long userId, Long roomId, CreateMemoReq createMemoReq) {
+
+        Member member = userRepository.findById(userId);
+        Room room = roomRepository.findRoomByRoomId(roomId);
+
+        MemoLog memoLog = createMemoReq.buildLog();
+        memoLog.writeLog(member, room);
+
+        logRepository.flush();
+        return memoLog.getId();
     }
 }
