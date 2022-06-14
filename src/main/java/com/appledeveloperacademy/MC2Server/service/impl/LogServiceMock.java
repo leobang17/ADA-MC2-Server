@@ -6,6 +6,7 @@ import com.appledeveloperacademy.MC2Server.domain.enums.HealthLogAction;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,11 @@ public class LogServiceMock implements LogService {
 
     @Override
     public Long createDietLog(Long userId, Long roomId, CreateDietReq createDietReq) {
+        return null;
+    }
+
+    @Override
+    public Long createWaterLog(Long userId, Long roomId, CreateWaterReq createWaterReq) {
         return null;
     }
 

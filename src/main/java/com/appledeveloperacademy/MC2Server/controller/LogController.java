@@ -6,11 +6,13 @@ import com.appledeveloperacademy.MC2Server.domain.log.MemoLog;
 import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
 import com.appledeveloperacademy.MC2Server.dto.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,13 +50,13 @@ public class LogController {
 
     // Create diet log for a particular room
     @PostMapping("/{roomId}/diets")
-    public String createDiets(
+    public ResponseEntity createDiets(
             @PathVariable final Long roomId,
             @RequestBody final CreateDietReq createDietReq
     ) {
         final Long userId = 0L;
-
-        return "createDiets";
+        Long dietLogId = logService.createDietLog(userId, roomId, createDietReq);
+        return ResponseEntity.created(URI.create("/api/rooms/" + roomId  + "/diets/" + dietLogId)).build();
     }
 
     // List watering logs for a particular room
@@ -74,11 +76,13 @@ public class LogController {
 
     // Create watering log for a particular room
     @PostMapping("/{roomId}/waters")
-    public String createWaters(
+    public ResponseEntity createWaters(
             @PathVariable final Long roomId,
-            @RequestBody final WaterInputDto waterInputDto
+            @RequestBody final CreateWaterReq createWaterReq
     ) {
-        return "createWaters";
+        final Long userId = 0L;
+        Long waterLogId = logService.createWaterLog(userId, roomId, createWaterReq);
+        return ResponseEntity.created(URI.create("/api/rooms/" + roomId + "/waters/" + waterLogId)).build();
     }
 
     // List health logs for a particular room
@@ -136,10 +140,6 @@ public class LogController {
         return "increaseSnacks";
     }
 
-    static class WaterInputDto {
-        private LocalDateTime time;
-        private int amount;
-    }
 
     static class HealthInputDto {
         private List<String> health;

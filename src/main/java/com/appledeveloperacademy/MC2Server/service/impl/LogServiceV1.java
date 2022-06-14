@@ -5,6 +5,7 @@ import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
 import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,5 +68,18 @@ public class LogServiceV1 implements LogService{
 
         logRepository.flush();
         return dietLog.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long createWaterLog(Long userId, Long roomId, CreateWaterReq createWaterReq) {
+        Member member = userRepository.findById(userId);
+        Room room = roomRepository.findRoomByRoomId(roomId);
+
+        WaterLog waterLog = createWaterReq.buildLog();
+        waterLog.writeLog(member, room);
+
+        logRepository.flush();
+        return waterLog.getId();
     }
 }
