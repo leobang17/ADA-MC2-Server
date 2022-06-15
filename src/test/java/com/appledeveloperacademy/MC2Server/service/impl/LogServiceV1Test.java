@@ -3,6 +3,7 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 import com.appledeveloperacademy.MC2Server.domain.*;
 import com.appledeveloperacademy.MC2Server.domain.enums.HealthLogAction;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
+import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -349,5 +351,39 @@ class LogServiceV1Test {
         assertEquals(2, resultList.size());
         assertEquals(HealthLogAction.ACTIVATE, resultList.get(1).getAction());
         assertEquals(HealthLogAction.DEACTIVATE, resultList.get(0).getAction());
+    }
+
+    @Test
+    void getSummarizedLogTest() {
+        Room room = new Room();
+        Member member = new Member();
+
+        DietLog dietLog = new DietLog();
+        dietLog.setCreatedAt(LocalDateTime.now());
+        WaterLog waterLog1 = new WaterLog();
+        waterLog1.setCreatedAt(LocalDateTime.now());
+        WaterLog waterLog = new WaterLog();
+        waterLog.setCreatedAt(LocalDateTime.now());
+        MemoLog memoLog = new MemoLog();
+
+        dietLog.writeLog(member, room);
+        waterLog1.writeLog(member, room);
+        waterLog.writeLog(member, room);
+        memoLog.writeLog(member, room);
+
+        em.persist(member);
+        em.persist(room);
+
+
+        em.flush();
+
+        SummerizedLogDto summerizedLogs = logServiceV1.getSummerizedLogs(member.getId(), room.getId(), false);
+        DietLog dietLog1 = em.find(DietLog.class, summerizedLogs.getDiet().getId());
+        WaterLog waterLog2 = em.find(WaterLog.class, summerizedLogs.getWater().getId());
+
+        System.out.println("summerizedLogs.toString() = " + summerizedLogs.toString());
+        assertEquals(dietLog, dietLog1);
+        assertEquals(waterLog, waterLog2);
+
     }
 }
