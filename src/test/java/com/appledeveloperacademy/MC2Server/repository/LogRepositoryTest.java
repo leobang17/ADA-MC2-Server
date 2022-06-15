@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -213,6 +214,32 @@ class LogRepositoryTest {
 
         // then
         assertEquals(healthTagActivated, find);
+    }
+
+    @Test
+    void getTodayLogsByRoomIdTest() {
+        Room room = new Room();
+
+        DietLog dietLog = new DietLog();
+        dietLog.setCreatedAt(LocalDateTime.now().minusDays(2));
+        DietLog dietLog1 = new DietLog();
+        dietLog1.setCreatedAt(LocalDateTime.now());
+        DietLog dietLog4 = new DietLog();
+        dietLog4.setCreatedAt(LocalDateTime.now());
+
+        room.addLog(dietLog);
+        room.addLog(dietLog1);
+        room.addLog(dietLog4);
+
+        em.persist(room);
+
+        em.flush();
+
+        List<Log> todayLogsByRoomId = logRepository.getLogsByRoomId(room.getId(), LogType.DIET, false, 0, 10);
+        List<Log> todayLogsByRoomId1 = logRepository.getTodayLogsByRoomId(room.getId(), LogType.DIET, false, 0, 10);
+
+        assertEquals(3,  todayLogsByRoomId.size());
+        assertEquals(2, todayLogsByRoomId1.size());
     }
 
 }

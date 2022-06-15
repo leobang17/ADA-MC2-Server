@@ -1,5 +1,6 @@
 package com.appledeveloperacademy.MC2Server.dto.log;
 
+import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -62,14 +63,10 @@ public class SummerizedLogDto {
     public static class HealthDto {
         private Long id;
         private String content;
-        private LogAuthor author;
-        private LocalDateTime timestamp;
 
-        public HealthDto(HealthLog healthLog) {
-            this.id = healthLog.getId();
-            this.content = healthLog.getHealthTag().getContent();
-            this.timestamp = healthLog.getCreatedAt();
-            this.author = LogAuthor.build(healthLog.getMember());
+        public HealthDto(HealthTag healthTag) {
+            this.id = healthTag.getId();
+            this.content = healthTag.getContent();
         }
     }
 

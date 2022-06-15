@@ -72,7 +72,7 @@ public class LogServiceMock implements LogService {
         SummerizedLogDto.WaterDto waterDto = new SummerizedLogDto.WaterDto(waterLogBuilder(0L, 30, false, 0L, "Leo"));
         SummerizedLogDto.SnackDto snackDto = new SummerizedLogDto.SnackDto(new SnackLog(2, LocalDateTime.now()));
         SummerizedLogDto.MemoDto memoDto = new SummerizedLogDto.MemoDto(memoLogBuilder(0L, "나는 낭만고양이", true, 0L, "Leo"));
-        SummerizedLogDto.HealthDto healthDto = new SummerizedLogDto.HealthDto(healthLogBuilder(0L, "배가 불러요", HealthLogAction.ACTIVATE, true, 0L, "Leo"));
+        SummerizedLogDto.HealthDto healthDto = new SummerizedLogDto.HealthDto(new HealthTag());
         List<SummerizedLogDto.MemoDto> memoDtos = new ArrayList<>();
         List<SummerizedLogDto.HealthDto> healthDtos = new ArrayList<>();
         memoDtos.add(memoDto);

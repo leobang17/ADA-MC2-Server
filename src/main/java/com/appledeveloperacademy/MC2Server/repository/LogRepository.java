@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.swing.*;
 import java.util.List;
 
 @Repository
@@ -25,7 +24,22 @@ public class LogRepository {
     }
 
     public List<Log> getLogsByRoomId(Long roomId, LogType type, boolean isPrivate, int offset, int limit) {
-        return em.createQuery(logQueryGenerator(roomId, type) + " AND l.isPublic = :public", Log.class)
+        return em.createQuery(
+                logQueryGenerator(roomId, type) +
+                        " AND l.isPublic = :public" +
+                        " ORDER BY l.id DESC", Log.class)
+                .setParameter("public", !isPrivate)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<Log> getTodayLogsByRoomId(Long roomId, LogType type, boolean isPrivate, int offset, int limit) {
+        return em.createQuery(
+                        logQueryGenerator(roomId, type) +
+                                " AND l.isPublic = :public" +
+                                " AND l.createdAt > CURRENT_DATE" +
+                                " ORDER BY l.id DESC", Log.class)
                 .setParameter("public", !isPrivate)
                 .setFirstResult(offset)
                 .setMaxResults(limit)

@@ -56,6 +56,9 @@ public class LogServiceV1 implements LogService{
 
     @Override
     public SummerizedLogDto getSummerizedLogs(Long userId, Long roomId, boolean isPrivate) {
+        logRepository.getLogsByRoomId(roomId, LogType.DIET, isPrivate, 0, 1);
+        logRepository.getLogsByRoomId(roomId, LogType.WATER, isPrivate, 0, 1);
+        logRepository.getLogsByRoomId(roomId, LogType.SNACK, isPrivate, 0, 1);
         return null;
     }
 
