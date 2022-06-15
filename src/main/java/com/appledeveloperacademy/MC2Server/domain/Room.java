@@ -56,6 +56,11 @@ public class Room extends CreationModificationLog {
         healthTagActivated.setRoom(null);
     }
 
+    public void removeInvitation(Invitation invitation) {
+        setInvitation(null);
+        invitation.setRoom(null);
+    }
+
     public static Room createRoom(MemberRoom memberRoom, Cat cat) {
         memberRoom.addCat(cat);
         Room room = new Room();

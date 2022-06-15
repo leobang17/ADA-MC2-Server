@@ -19,10 +19,6 @@ public class RoomRepository {
         em.persist(room);
     }
 
-    public void addMemberToRoom(Room room, Member member) {
-        // service 에서 room.addMemberRoom  (MemberRoom은 cat이랑 member 서로 연결되어있는 상태)
-    }
-
     public List<Invitation> getInvitationByCode(String invitationCode) {
         return em.createQuery(
                         "Select i" +
@@ -65,8 +61,22 @@ public class RoomRepository {
                 .getSingleResult();
     }
 
+    public MemberRoom checkAuthority(Long userId, Long roomId) {
+        return em.createQuery(
+                        "SELECT mr" +
+                                " FROM MemberRoom mr" +
+                                " JOIN mr.room r" +
+                                " JOIN mr.member m" +
+                                " WHERE m.id = :userId" +
+                                " AND r.id = :roomId", MemberRoom.class)
+                .setParameter("userId", userId)
+                .setParameter("roomId", roomId)
+                .getSingleResult();
+    }
+
     public void removeInvitation(Invitation invitation) {
         em.remove(invitation);
+        em.flush();
     }
 
     public void createInvitation(Invitation invitation) {
@@ -75,6 +85,10 @@ public class RoomRepository {
 
     public void createMemberRoom(MemberRoom memberRoom) {
         em.persist(memberRoom);
+    }
+
+    public void flush() {
+        em.flush();
     }
 
 }

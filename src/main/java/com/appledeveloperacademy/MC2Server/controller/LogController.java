@@ -7,6 +7,7 @@ import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
 import com.appledeveloperacademy.MC2Server.dto.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.*;
 import com.appledeveloperacademy.MC2Server.service.LogService;
+import com.appledeveloperacademy.MC2Server.service.impl.TokenService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +20,21 @@ import java.util.stream.Collectors;
 @RestController
 public class LogController {
     private final LogService logService;
+    private final TokenService tokenService;
 
-    public LogController(@Qualifier(value = "logServiceV1") LogService logService) {
+    public LogController(@Qualifier(value = "logServiceV1") LogService logService, TokenService tokenService) {
         this.logService = logService;
+        this.tokenService = tokenService;
     }
 
     // List summarized logs for a particular room
     @GetMapping("/{roomId}/logs")
     public ResponseEntity<SummerizedLogDto> getLogs(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         SummerizedLogDto summerizedLogs = logService.getSummerizedLogs(userId, roomId, isPrivate);
         return ResponseEntity.ok(summerizedLogs);
     }
@@ -38,12 +42,13 @@ public class LogController {
     // List diet logs for a particular room
     @GetMapping("/{roomId}/diets")
     public ResponseEntity<PagedListResult<DietLogDto>> getDiets(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         List<DietLog> dietLogs = logService.getDietLogs(userId, roomId, isPrivate, limit, offset);
         List<DietLogDto> collect = dietLogs.stream().map(DietLogDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
@@ -52,10 +57,11 @@ public class LogController {
     // Create diet log for a particular room
     @PostMapping("/{roomId}/diets")
     public ResponseEntity createDiets(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestBody final CreateDietReq createDietReq
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         Long dietLogId = logService.createDietLog(userId, roomId, createDietReq);
         return ResponseEntity.created(URI.create("/api/rooms/" + roomId  + "/diets/" + dietLogId)).build();
     }
@@ -63,12 +69,13 @@ public class LogController {
     // List watering logs for a particular room
     @GetMapping("/{roomId}/waters")
     public ResponseEntity<PagedListResult<WaterLogDto>> getWaters(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         List<WaterLog> waterLogs = logService.getWaterLogs(userId, roomId, isPrivate, limit, offset);
         List<WaterLogDto> collect = waterLogs.stream().map(WaterLogDto::new)
                 .collect(Collectors.toList());
@@ -78,10 +85,11 @@ public class LogController {
     // Create watering log for a particular room
     @PostMapping("/{roomId}/waters")
     public ResponseEntity createWaters(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestBody final CreateWaterReq createWaterReq
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         Long waterLogId = logService.createWaterLog(userId, roomId, createWaterReq);
         return ResponseEntity.created(URI.create("/api/rooms/" + roomId + "/waters/" + waterLogId)).build();
     }
@@ -89,12 +97,13 @@ public class LogController {
     // List health logs for a particular room
     @GetMapping("/{roomId}/health")
     public ResponseEntity<PagedListResult<HealthLogDto>> getHealth(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         List<HealthLog> healthLogs = logService.getHealthLogs(userId, roomId, isPrivate, limit, offset);
         List<HealthLogDto> collect = healthLogs.stream().map(HealthLogDto::new)
                 .collect(Collectors.toList());
@@ -104,10 +113,11 @@ public class LogController {
     // Create health log for a particular room
     @PostMapping("/{roomId}/healths")
     public ResponseEntity createHealth(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestBody final ListedRequest<CreateHealthReq> createHealthReq
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         Long healthLog = logService.createHealthLog(userId, roomId, createHealthReq.getData());
 
         return ResponseEntity.created(URI.create("/api/rooms/" + roomId + "/healths")).build();
@@ -116,12 +126,13 @@ public class LogController {
     // List memo logs for a particular room
     @GetMapping("/{roomId}/memos")
     public ResponseEntity<PagedListResult<MemoLogDto>> getMemos(
+            @RequestHeader(value = "Authorization") final String usercode,
             @PathVariable final Long roomId,
             @RequestParam(name = "private", required = false, defaultValue = "false") final boolean isPrivate,
             @RequestParam(name = "limit", required = false, defaultValue = "20") final int limit,
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate, limit, offset);
         List<MemoLogDto> collect = memoLogs.stream().map(MemoLogDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
@@ -130,10 +141,11 @@ public class LogController {
     // Create memo log for a particular room
     @PostMapping("/{roomId}/memos")
     public ResponseEntity createMemos(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @RequestBody final CreateMemoReq createMemoReq
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         Long memoLogId = logService.createMemoLog(userId, roomId, createMemoReq);
         return ResponseEntity.created(URI.create("/api/rooms" + roomId + "/memos/" + memoLogId)).build();
     }
@@ -141,20 +153,13 @@ public class LogController {
     // Increase snack log for a particular room
     @PutMapping("/{roomId}/snacks/{snackId}")
     public ResponseEntity increaseSnacks(
+            @RequestHeader(value = "Authorization") String usercode,
             @PathVariable final Long roomId,
             @PathVariable final Long snackId
     ) {
-        final Long userId = 0L;
+        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
         logService.increaseSnack(roomId, snackId);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test")
-    public String test(
-            @RequestHeader(value = "Authorization") String usercode
-    ) {
-        String[] token = usercode.split(" ");
-        return token[1];
     }
 }
 

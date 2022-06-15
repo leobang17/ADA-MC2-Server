@@ -88,6 +88,7 @@ public class RoomServiceV1 implements RoomService {
             } else {
                 // invitation exists but invitation is expired.
                 // Do: Delete invitation
+                room.removeInvitation(invitation);
                 roomRepository.removeInvitation(invitation);
             }
         }
