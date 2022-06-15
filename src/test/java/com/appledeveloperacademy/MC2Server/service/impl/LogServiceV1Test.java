@@ -384,6 +384,35 @@ class LogServiceV1Test {
         System.out.println("summerizedLogs.toString() = " + summerizedLogs.toString());
         assertEquals(dietLog, dietLog1);
         assertEquals(waterLog, waterLog2);
+    }
+
+    @Test
+    void increaseSnackTest() {
+        // given
+        Member member = new Member();
+        Room room = new Room();
+
+        SnackLog snackLog = new SnackLog();
+        snackLog.setCount(0);
+        snackLog.writeLog(member, room);
+
+        em.persist(member);
+        em.persist(room);
+
+        // when
+        em.flush();
+        logServiceV1.increaseSnack(room.getId(), snackLog.getId());
+        logServiceV1.increaseSnack(room.getId(), snackLog.getId());
+
+        SnackLog snackLog1 = em.find(SnackLog.class, snackLog.getId());
+
+        // then
+        assertEquals(2, snackLog1.getCount());
+
+        // 2 when - then
+        logServiceV1.increaseSnack(room.getId(), snackLog.getId());
+
+        assertEquals(3, snackLog1.getCount());
 
     }
 }

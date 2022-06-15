@@ -4,10 +4,13 @@ import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
+import com.appledeveloperacademy.MC2Server.service.LogService;
+import com.appledeveloperacademy.MC2Server.service.RoomService;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -26,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceV1Test {
     @Autowired EntityManager em;
     @Autowired UserServiceV1 service;
+    @Autowired
+    RoomServiceV1 roomService;
 
     @Autowired UserRepository userRepository;
 
@@ -64,7 +69,7 @@ class UserServiceV1Test {
     @Test
     void randomSixNumberTest() {
         // given
-        String s = (String) ReflectionTestUtils.invokeMethod(service,  "generateUsercode");
+        String s = (String) ReflectionTestUtils.invokeMethod(roomService,  "generateUsercode");
 
         // when
         System.out.println(s);
@@ -77,11 +82,11 @@ class UserServiceV1Test {
         // given
         CreateUserReq createUserReq = new CreateUserReq();
         createUserReq.setUsername("Leo");
-        Long userId = service.createUser(createUserReq);
+        Member user = service.createUser(createUserReq);
 
         // when
         em.flush();
-        Member member = em.find(Member.class, userId);
+        Member member = em.find(Member.class, user.getId());
 
         // then
         assertEquals("Leo", member.getUsername());
