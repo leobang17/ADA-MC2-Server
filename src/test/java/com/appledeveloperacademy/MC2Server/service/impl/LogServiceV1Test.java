@@ -1,10 +1,10 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
-import com.appledeveloperacademy.MC2Server.domain.Member;
-import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
-import com.appledeveloperacademy.MC2Server.domain.Room;
+import com.appledeveloperacademy.MC2Server.domain.*;
+import com.appledeveloperacademy.MC2Server.domain.enums.HealthLogAction;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -298,6 +299,55 @@ class LogServiceV1Test {
 
         // then
         assertEquals("안녕하세요!", memoLog1.getContent());
+    }
 
+    @Test
+    void createHealthLogTest() {
+        // create room & member
+        Room room = new Room();
+        Member member = new Member();
+
+        // create health tag each active & inactive
+        HealthTag activeTag = new HealthTag();
+        activeTag.setContent("Activated Tag");
+        HealthTag inactiveTag = new HealthTag();
+        inactiveTag.setContent("Inactive Tag");
+
+        // hook tags to member
+        member.addHealthTags(activeTag, inactiveTag);
+
+        // activate active tag
+        HealthTagActivated healthTagActivated = new HealthTagActivated();
+        healthTagActivated.activate(activeTag, room);
+
+        // persist
+        em.persist(member);
+        em.persist(room);
+
+        em.flush();
+
+        // when
+        CreateHealthReq createHealthReq = new CreateHealthReq();
+        createHealthReq.setTagId(activeTag.getId());
+        CreateHealthReq createHealthReq1 = new CreateHealthReq();
+        createHealthReq1.setTagId(inactiveTag.getId());
+        List<CreateHealthReq> idList = new ArrayList<>();
+        idList.add(createHealthReq);
+        idList.add(createHealthReq1);
+
+        logServiceV1.createHealthLog(member.getId(), room.getId(), idList);
+
+        List<HealthTag> tags = logRepository.listHealthTagsActivated(room.getId());
+
+        List<HealthLog> resultList = em.createQuery(
+                "SELECT l" +
+                        " FROM HealthLog l", HealthLog.class
+        ).getResultList();
+
+        assertEquals(1, tags.size());
+        assertEquals("Inactive Tag", tags.get(0).getContent());
+        assertEquals(2, resultList.size());
+        assertEquals(HealthLogAction.ACTIVATE, resultList.get(1).getAction());
+        assertEquals(HealthLogAction.DEACTIVATE, resultList.get(0).getAction());
     }
 }
