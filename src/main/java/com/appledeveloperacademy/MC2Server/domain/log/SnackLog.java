@@ -2,6 +2,7 @@ package com.appledeveloperacademy.MC2Server.domain.log;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class SnackLog extends Log {
     private int count;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    public SnackLog() {
+        this.count = 0;
+    }
 }

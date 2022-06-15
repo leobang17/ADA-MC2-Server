@@ -70,7 +70,7 @@ public class LogServiceMock implements LogService {
     public SummerizedLogDto getSummerizedLogs(Long userId, Long roomId, boolean isPrivate) {
         SummerizedLogDto.DietDto dietDto = new SummerizedLogDto.DietDto(dietLogBuilder(0L, "개쩌는 사료", 10, true, 0L, "Leo"));
         SummerizedLogDto.WaterDto waterDto = new SummerizedLogDto.WaterDto(waterLogBuilder(0L, 30, false, 0L, "Leo"));
-        SummerizedLogDto.SnackDto snackDto = new SummerizedLogDto.SnackDto(new SnackLog(2, LocalDateTime.now()));
+        SummerizedLogDto.SnackDto snackDto = new SummerizedLogDto.SnackDto(new SnackLog(2));
         SummerizedLogDto.MemoDto memoDto = new SummerizedLogDto.MemoDto(memoLogBuilder(0L, "나는 낭만고양이", true, 0L, "Leo"));
         SummerizedLogDto.HealthDto healthDto = new SummerizedLogDto.HealthDto(new HealthTag());
         List<SummerizedLogDto.MemoDto> memoDtos = new ArrayList<>();
