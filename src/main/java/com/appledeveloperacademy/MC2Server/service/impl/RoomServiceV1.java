@@ -20,11 +20,10 @@ import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
-
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
 @Qualifier(value = "roomServiceV1")
 public class RoomServiceV1 implements RoomService {
     private final RoomRepository roomRepository;
@@ -84,7 +83,7 @@ public class RoomServiceV1 implements RoomService {
         // persist
         roomRepository.createRoom(room);
 
-        return memberRoom.getId();
+        return room.getId();
     }
 
     @Override
@@ -127,7 +126,7 @@ public class RoomServiceV1 implements RoomService {
                 // Do: Delete invitation
                 room.removeInvitation(invitation);
                 roomRepository.removeInvitation(invitation);
-
+                roomRepository.flush();
                 throw new CustomException(ErrorCode.INVITATION_EXPIRED);
             }
         }
@@ -150,3 +149,4 @@ public class RoomServiceV1 implements RoomService {
 
 
 }
+

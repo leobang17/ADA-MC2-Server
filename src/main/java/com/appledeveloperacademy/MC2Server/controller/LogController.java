@@ -157,7 +157,7 @@ public class LogController {
             @PathVariable final Long roomId,
             @PathVariable final Long snackId
     ) {
-        final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
+        tokenService.authenticateAndAuthorize(usercode, roomId);
         logService.increaseSnack(roomId, snackId);
         return ResponseEntity.ok().build();
     }

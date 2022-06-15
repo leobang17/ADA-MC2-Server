@@ -19,8 +19,7 @@ public class Room extends CreationModificationLog {
     @Column(name = "room_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "invitation_id")
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Invitation invitation;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

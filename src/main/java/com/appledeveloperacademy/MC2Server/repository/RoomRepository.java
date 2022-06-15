@@ -100,10 +100,10 @@ public class RoomRepository {
     }
 
     public void removeInvitation(Invitation invitation) {
-        em.remove(invitation);
-//        em.createNativeQuery("DELETE FROM INVITATION WHERE invitation_id = :id")
-//                .setParameter("id", invitation.getId())
-//                .executeUpdate();
+//        em.remove(invitation);
+        em.createNativeQuery("DELETE FROM invitation WHERE (invitation_id = :id);")
+                .setParameter("id", invitation.getId())
+                .executeUpdate();
         em.flush();
     }
 

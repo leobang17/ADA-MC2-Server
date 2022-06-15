@@ -19,7 +19,8 @@ public class Invitation extends CreationLog {
     @Column(name = "invitation_id")
     private Long id;
 
-    @OneToOne(mappedBy = "invitation")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @Column(unique = true)
