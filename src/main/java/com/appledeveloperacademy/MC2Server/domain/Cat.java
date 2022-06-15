@@ -51,6 +51,7 @@ public class Cat {
         this.profileImgUrl = createCatReq.getProfileImgUrl();
         this.coordinate = createCatReq.getCoordinate();
         this.type = createCatReq.getType();
+        this.coordinate = createCatReq.getCoordinate();
     }
 
     private LocalDateTime ageToBirth(int age) {

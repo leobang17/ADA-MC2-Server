@@ -12,6 +12,7 @@ import com.appledeveloperacademy.MC2Server.service.RoomService;
 import com.appledeveloperacademy.MC2Server.service.impl.TokenService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/api/rooms")
 @RestController
+@Slf4j
 public class RoomController {
 
     private final RoomService roomService;
@@ -34,8 +36,10 @@ public class RoomController {
 
     // List all rooms managed by a user
     @GetMapping
-    public ResponseEntity<ListedResult<ParticipatingRoomDto>> getAllRooms() {
-        Long userId = 1L;
+    public ResponseEntity<ListedResult<ParticipatingRoomDto>> getAllRooms(
+            @RequestHeader(value = "Authorization") String usercode
+    ) {
+        Long userId = tokenService.authenticate(usercode);
         List<MemberRoom> rooms = roomService.findAllParticipatingRooms(userId);
         List<ParticipatingRoomDto> collect = rooms.stream().map(ParticipatingRoomDto::build)
                 .collect(Collectors.toList());

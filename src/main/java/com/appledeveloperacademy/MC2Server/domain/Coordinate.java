@@ -1,15 +1,15 @@
 package com.appledeveloperacademy.MC2Server.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
-@AllArgsConstructor
+@Data
 @Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Coordinate {
     private Long x;
     private Long y;

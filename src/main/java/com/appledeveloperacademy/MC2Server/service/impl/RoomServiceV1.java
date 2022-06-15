@@ -2,21 +2,28 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.*;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
+import com.appledeveloperacademy.MC2Server.exception.CustomException;
+import com.appledeveloperacademy.MC2Server.exception.ErrorCode;
 import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 @Qualifier(value = "roomServiceV1")
 public class RoomServiceV1 implements RoomService {
     private final RoomRepository roomRepository;
@@ -24,10 +31,31 @@ public class RoomServiceV1 implements RoomService {
 
 
     @Override
+    @Transactional
     public Invitation findInvitationCodeByRoomId(Long roomId) {
-        // invitation code 있을 때 정상
-        // 없을 때 exception throw
-        return roomRepository.getInvitationByRoomId(roomId);
+        Invitation invitation;
+
+        try {
+            invitation = roomRepository.getInvitationByRoomId(roomId);
+            // if invitation doesn't exist, throw error
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomException(ErrorCode.INVITATION_NOT_FOUND);
+            // if invitation is more than 2, throw error
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new CustomException(ErrorCode.INVITATION_DUPLICATED);
+        }
+
+        // if invitation is expired,
+        // Do: remove invitation and throw error
+        if (invitation.isExpired()) {
+            Room room = invitation.getRoom();
+            room.removeInvitation(invitation);
+            roomRepository.removeInvitation(invitation);
+
+            throw new CustomException(ErrorCode.INVITATION_EXPIRED);
+        }
+
+        return invitation;
     }
 
     @Override
@@ -75,7 +103,7 @@ public class RoomServiceV1 implements RoomService {
     @Transactional
     public Long createInvitation(Long roomId) {
         // get room by roomId
-        Room room = roomRepository.findRoomByRoomId(roomId);
+        Room room = roomRepository.findRoomByRoomIdWithInvitation(roomId);
 
         // check if room has invitation
         Invitation invitation = room.getInvitation();

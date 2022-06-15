@@ -61,6 +61,16 @@ public class RoomRepository {
                 .getSingleResult();
     }
 
+    public Room findRoomByRoomIdWithInvitation(Long roomId) {
+        return em.createQuery(
+                        "SELECT r" +
+                                " FROM Room r" +
+                                " JOIN FETCH r.invitation" +
+                                " WHERE r.id = :id", Room.class)
+                .setParameter("id", roomId)
+                .getSingleResult();
+    }
+
     public MemberRoom checkAuthority(Long userId, Long roomId) {
         return em.createQuery(
                         "SELECT mr" +

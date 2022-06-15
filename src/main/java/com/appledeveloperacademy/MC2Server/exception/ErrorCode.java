@@ -22,6 +22,8 @@ public enum ErrorCode {
 
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
+    INVITATION_NOT_FOUND(NOT_FOUND, "초대코드가 존재하지 않습니다."),
+    INVITATION_EXPIRED(NOT_FOUND, "초대코드가 만료되었습니다."),
 
 
 
@@ -29,6 +31,7 @@ public enum ErrorCode {
     USERCODE_DUPLICATED(CONFLICT, "유저 코드가 중복됩니다."),
     USER_ALREADY_PARTICIPATING(CONFLICT, "유저가 이미 방에 참여하고 있습니다."),
     TAG_DUPLICATED(CONFLICT, "이미 존재하는 태그입니다."),
+    INVITATION_DUPLICATED(CONFLICT, "이미 초대코드가 존재합니다."),
     ;
 
     private final HttpStatus status;

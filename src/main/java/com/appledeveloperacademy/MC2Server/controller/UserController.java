@@ -4,6 +4,7 @@ import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.HealthTagDto;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
+import com.appledeveloperacademy.MC2Server.dto.request.AuthReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.service.UserService;
@@ -18,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 @RestController
 public class UserController {
     private final UserService userService;
@@ -29,19 +30,19 @@ public class UserController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping
+    @PostMapping("/users")
     public ResponseEntity createUser(@RequestBody final CreateUserReq createUserReq) {
         Member user = userService.createUser(createUserReq);
         return ResponseEntity.created(URI.create("/users/" + user.getId())).body(UserInfoDto.build(user));
     }
 
-    @GetMapping("/{usercode}")
+    @GetMapping("/users/{usercode}")
     public ResponseEntity<UserInfoDto> getUser(@PathVariable final String usercode) {
         Member findUser = userService.findUserByUserCode(usercode);
         return ResponseEntity.status(HttpStatus.OK).body(UserInfoDto.build(findUser));
     }
 
-    @GetMapping("/health-tags")
+    @GetMapping("/users/health-tags")
     public ResponseEntity<ListedResult<HealthTagDto>> getCustomHealthTags(
             @RequestHeader(value = "Authorization") String usercode
     ) {
@@ -51,13 +52,21 @@ public class UserController {
         return ResponseEntity.ok(new ListedResult<>(collect));
     }
 
-    @PostMapping("/health-tags")
+    @PostMapping("/users/health-tags")
     public ResponseEntity createCustomHealthTags(
             @RequestHeader(value = "Authorization") String usercode,
             @RequestBody final CreateHealthTagReq tagReq
     ) {
         final Long userId = tokenService.authenticate(usercode);
+        Long tagId = userService.createHealthTag(userId, tagReq);
+        return ResponseEntity.created(URI.create("/api/users/health-tags/" + tagId)).build();
+    }
 
-        return ResponseEntity.created(URI.create("/api/users/health-tags/")).build();
+    @PostMapping("/auth")
+    public ResponseEntity authenticateUser(
+            @RequestBody final AuthReq authReq
+    ) {
+        Member userByUserCode = userService.findUserByUserCode(authReq.getUsercode());
+        return ResponseEntity.ok().body(UserInfoDto.build(userByUserCode));
     }
 }

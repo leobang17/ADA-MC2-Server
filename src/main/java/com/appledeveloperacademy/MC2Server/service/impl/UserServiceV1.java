@@ -27,8 +27,13 @@ public class UserServiceV1 implements UserService {
 
     @Override
     public Member findUserByUserCode(String usercode) {
-        // Result가 1개 일 때
-        // Result가 1개 이상일 때
+        List<Member> members = userRepository.findByUsercode(usercode);
+
+        if (members.size() > 1) {
+            throw new CustomException(ErrorCode.USERCODE_DUPLICATED);
+        } else if (members.size() == 0) {
+            throw new CustomException(ErrorCode.UNAUTHENTICATED_MEMBER);
+        }
         return userRepository.findByUsercode(usercode).get(0);
     }
 
