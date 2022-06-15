@@ -64,8 +64,10 @@ class UserRepositoryTest {
         tag1.setContent("뿡");
         HealthTag tag2 = new HealthTag();
         tag2.setContent("뽕");
-        tag1.addHealthTag(member);
-        tag2.addHealthTag(member);
+//        tag1.addHealthTag(member);
+//        tag2.addHealthTag(member);
+        member.addHealthTag(tag1);
+        member.addHealthTag(tag2);
         em.persist(member);
         
         // when
@@ -73,6 +75,10 @@ class UserRepositoryTest {
         List<HealthTag> tags = userRepository.listHealthTagsById(id);
 
         // then
+        assertEquals(2, tags.size());
+        for (HealthTag tag : tags) {
+            System.out.println("tag.getContent() = " + tag.getContent());
+        }
 //        assertEquals(member.getHealthTags(), tags);
 
     }
@@ -96,6 +102,33 @@ class UserRepositoryTest {
 
         // then
         assertEquals(member, byUsercodeFetchRoom.get(0));
+    }
+
+    @Test
+    void listHealthTagsByTagContent() {
+        // given
+        Member member = new Member();
+        HealthTag healthTag = new HealthTag();
+        HealthTag healthTag1 = new HealthTag();
+        healthTag.setContent("태그");
+        healthTag1.setContent("태그1");
+
+        member.addHealthTags(healthTag, healthTag1);
+
+        em.persist(member);
+
+        // when
+        em.flush();
+        List<HealthTag> tags = userRepository.listHealthTagsByTagContent(member.getId(), "태그");
+        List<HealthTag> tags1 = userRepository.listHealthTagsByTagContent(member.getId(), "태그4");
+        List<HealthTag> tags2 = userRepository.listHealthTagsById(member.getId());
+        
+        // then
+        assertEquals(1, tags.size());
+        assertEquals(0, tags1.size());
+        for (HealthTag tag : tags2) {
+            System.out.println("tag.getContent() = " + tag.getContent());
+        }
     }
 
     private Member createMember() {

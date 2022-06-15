@@ -2,7 +2,9 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
+import com.appledeveloperacademy.MC2Server.exception.CustomException;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
@@ -53,9 +55,16 @@ class UserServiceV1Test {
     void findHealthTagsByUserId() {
         // given
         HealthTag healthTag = new HealthTag();
+        healthTag.setContent("태그1");
         HealthTag healthTag2 = new HealthTag();
+        healthTag2.setContent("태그2");
+        HealthTag healthTag3 = new HealthTag();
+        healthTag3.setContent("태그3");
         Member member = new Member();
-        member.addHealthTags(healthTag, healthTag2);
+        member.addHealthTag(healthTag);
+        member.addHealthTag(healthTag2);
+        member.addHealthTag(healthTag3);
+
         em.persist(member);
 
         // when
@@ -63,7 +72,7 @@ class UserServiceV1Test {
         List<HealthTag> healthTagsByUserId = service.findHealthTagsByUserId(member.getId());
 
         // then
-        assertEquals(2, healthTagsByUserId.size());
+        assertEquals(3, healthTagsByUserId.size());
     }
 
     @Test
@@ -91,5 +100,39 @@ class UserServiceV1Test {
         // then
         assertEquals("Leo", member.getUsername());
         System.out.println(member.getUsercode());
+    }
+
+    @Test
+    void tagDuplicatedTest() {
+        // given
+        Member member = new Member();
+        HealthTag healthTag = new HealthTag();
+        HealthTag healthTag1 = new HealthTag();
+        healthTag.setContent("태그");
+        healthTag1.setContent("태그1");
+
+        member.addHealthTags(healthTag, healthTag1);
+
+        em.persist(member);
+
+        // when
+        em.flush();
+        CreateHealthTagReq createHealthTagReq = new CreateHealthTagReq();
+        createHealthTagReq.setTag("태그");
+
+        CreateHealthTagReq createHealthTagReq1 = new CreateHealthTagReq();
+        createHealthTagReq1.setTag("태그123");
+
+
+        assertThrows(CustomException.class, () -> {
+            Long healthTag2 = service.createHealthTag(member.getId(), createHealthTagReq);
+        });
+
+        Long healthTag2 = service.createHealthTag(member.getId(), createHealthTagReq1);
+        System.out.println("healthTag2 = " + healthTag2);
+
+        // given
+        HealthTag healthTag3 = em.find(HealthTag.class, healthTag2);
+        assertEquals("태그123", healthTag3.getContent());
     }
 }
