@@ -3,9 +3,7 @@ package com.appledeveloperacademy.MC2Server.service;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.HealthLogDto;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
+import com.appledeveloperacademy.MC2Server.dto.request.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,4 +26,5 @@ public interface LogService {
 
     Long createMemoLog(Long userId, Long roomId, CreateMemoReq createMemoReq);
 
+    Long createHealthLog(Long userId, Long roomId, List<CreateHealthReq> createHealthReq);
 }

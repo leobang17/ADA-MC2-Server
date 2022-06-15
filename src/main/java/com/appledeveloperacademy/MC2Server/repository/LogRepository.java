@@ -1,5 +1,8 @@
 package com.appledeveloperacademy.MC2Server.repository;
 
+import com.appledeveloperacademy.MC2Server.domain.HealthTag;
+import com.appledeveloperacademy.MC2Server.domain.HealthTagActivated;
+import com.appledeveloperacademy.MC2Server.domain.Room;
 import com.appledeveloperacademy.MC2Server.domain.log.DietLog;
 import com.appledeveloperacademy.MC2Server.domain.log.Log;
 import com.appledeveloperacademy.MC2Server.domain.log.SnackLog;
@@ -66,6 +69,40 @@ public class LogRepository {
                 .setParameter("id", roomId)
                 .setParameter("public", !isPrivate)
                 .getSingleResult();
+    }
+
+    public HealthTag findHealthTagById(Long tagId) {
+        return em.find(HealthTag.class, tagId);
+    }
+
+    public List<HealthTag> listHealthTagsActivated(Long roomId) {
+        return em.createQuery(
+                        "SELECT t" +
+                                " FROM Room r" +
+                                " JOIN r.activatedTags at" +
+                                " JOIN at.healthTag t" +
+                                " WHERE r.id = :id", HealthTag.class)
+                .setParameter("id", roomId)
+                .getResultList();
+    }
+
+    public HealthTagActivated findHealthTagActivate(Long roomId, Long tagId) {
+        return em.createQuery(
+                        "SELECT at" +
+                                " FROM Room r" +
+                                " JOIN r.activatedTags at" +
+                                " JOIN at.healthTag t" +
+                                " WHERE r.id = :roomId" +
+                                " AND t.id = :tagId", HealthTagActivated.class)
+                .setParameter("roomId", roomId)
+                .setParameter("tagId", tagId)
+                .getSingleResult();
+    }
+
+    public void deactivateHealthTag(HealthTagActivated healthTagActivated, Room room) {
+        room.removeActivatedTag(healthTagActivated);
+        em.remove(healthTagActivated);
+        em.flush();
     }
 
     private String logQueryGenerator(Long roomId, LogType type) {

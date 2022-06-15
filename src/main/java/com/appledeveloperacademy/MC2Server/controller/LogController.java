@@ -5,16 +5,13 @@ import com.appledeveloperacademy.MC2Server.domain.log.HealthLog;
 import com.appledeveloperacademy.MC2Server.domain.log.MemoLog;
 import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
 import com.appledeveloperacademy.MC2Server.dto.log.*;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
+import com.appledeveloperacademy.MC2Server.dto.request.*;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,11 +100,14 @@ public class LogController {
 
     // Create health log for a particular room
     @PostMapping("/{roomId}/healths")
-    public String createHealth(
+    public ResponseEntity createHealth(
             @PathVariable final Long roomId,
-            @RequestBody final HealthInputDto healthInputDto
+            @RequestBody final ListedRequest<CreateHealthReq> createHealthReq
     ) {
-        return "createHealth";
+        final Long userId = 0L;
+        Long healthLog = logService.createHealthLog(userId, roomId, createHealthReq.getData());
+
+        return ResponseEntity.created(URI.create("/api/rooms/" + roomId + "/healths")).build();
     }
 
     // List memo logs for a particular room
@@ -126,12 +126,13 @@ public class LogController {
 
     // Create memo log for a particular room
     @PostMapping("/{roomId}/memos")
-    public String createMemos(
+    public ResponseEntity createMemos(
             @PathVariable final Long roomId,
             @RequestBody final CreateMemoReq createMemoReq
     ) {
-
-        return "createMemos";
+        final Long userId = 0L;
+        Long memoLogId = logService.createMemoLog(userId, roomId, createMemoReq);
+        return ResponseEntity.created(URI.create("/api/rooms" + roomId + "/memos/" + memoLogId)).build();
     }
 
     // Increase snack log for a particular room
@@ -140,11 +141,6 @@ public class LogController {
             @PathVariable final Long roomId
     ) {
         return "increaseSnacks";
-    }
-
-
-    static class HealthInputDto {
-        private List<String> health;
     }
 }
 

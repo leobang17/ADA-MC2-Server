@@ -26,4 +26,10 @@ public class HealthTagActivated {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "log_id")
     private Log log;
+
+    public void activate(HealthTag healthTag, Room room) {
+        room.getActivatedTags().add(this);
+        setRoom(room);
+        setHealthTag(healthTag);
+    }
 }

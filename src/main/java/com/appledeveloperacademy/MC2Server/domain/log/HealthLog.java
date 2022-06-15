@@ -20,4 +20,5 @@ public class HealthLog extends Log {
     private HealthTag healthTag;
 
     private HealthLogAction action;
+
 }

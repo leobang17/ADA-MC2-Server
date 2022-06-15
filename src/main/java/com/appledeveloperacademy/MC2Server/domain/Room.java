@@ -51,6 +51,11 @@ public class Room extends CreationModificationLog {
         this.setInvitation(invitation);
     }
 
+    public void removeActivatedTag(HealthTagActivated healthTagActivated) {
+        activatedTags.remove(healthTagActivated);
+        healthTagActivated.setRoom(null);
+    }
+
     public static Room createRoom(MemberRoom memberRoom, Cat cat) {
         memberRoom.addCat(cat);
         Room room = new Room();

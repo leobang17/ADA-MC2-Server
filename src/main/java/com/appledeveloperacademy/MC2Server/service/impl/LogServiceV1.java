@@ -1,12 +1,13 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
+import com.appledeveloperacademy.MC2Server.domain.HealthTag;
+import com.appledeveloperacademy.MC2Server.domain.HealthTagActivated;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.domain.Room;
+import com.appledeveloperacademy.MC2Server.domain.enums.HealthLogAction;
 import com.appledeveloperacademy.MC2Server.domain.log.*;
 import com.appledeveloperacademy.MC2Server.dto.log.SummerizedLogDto;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateDietReq;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateMemoReq;
-import com.appledeveloperacademy.MC2Server.dto.request.CreateWaterReq;
+import com.appledeveloperacademy.MC2Server.dto.request.*;
 import com.appledeveloperacademy.MC2Server.repository.LogRepository;
 import com.appledeveloperacademy.MC2Server.repository.LogType;
 import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
@@ -97,4 +98,49 @@ public class LogServiceV1 implements LogService{
         logRepository.flush();
         return memoLog.getId();
     }
+
+    @Override
+    @Transactional
+    public Long createHealthLog(Long userId, Long roomId, List<CreateHealthReq> createHealthReq) {
+        List<HealthTag> tags = logRepository.listHealthTagsActivated(roomId);
+        Member member = userRepository.findById(userId);
+        Room room = roomRepository.findRoomByRoomId(roomId);
+
+        // get tags with the id;
+        for (CreateHealthReq req : createHealthReq) {
+            Long tagId = req.getTagId();
+            HealthTag healthTag = logRepository.findHealthTagById(tagId);
+
+            // find tag if it's activated
+            final boolean isActivated = tags.stream().anyMatch(t -> t.getId() == tagId);
+            HealthLogAction action;
+
+
+            // if activated
+            if (isActivated) {
+                action = HealthLogAction.DEACTIVATE;
+                // Do: delete from activated and create log
+                HealthTagActivated healthTagActivated = logRepository.findHealthTagActivate(roomId, tagId);
+                logRepository.deactivateHealthTag(healthTagActivated, room);
+
+                // else (deactivated)
+            } else {
+                // Do: append to activated list and create log
+                action = HealthLogAction.ACTIVATE;
+                HealthTagActivated healthTagActivated = new HealthTagActivated();
+                healthTagActivated.activate(healthTag, room);
+            }
+
+            HealthLog healthLog = new HealthLog();
+            healthLog.setHealthTag(healthTag);
+            healthLog.setAction(action);
+            healthLog.writeLog(member, room);
+
+            logRepository.flush();
+        }
+
+        return null;
+    }
+
+
 }
