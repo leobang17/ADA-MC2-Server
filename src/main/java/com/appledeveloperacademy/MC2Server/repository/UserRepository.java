@@ -41,4 +41,20 @@ public class UserRepository {
                 .getResultList();
     }
 
+    public List<HealthTag> listHealthTagsByTagContent(Long userId, String content) {
+        return em.createQuery(
+                        "SELECT t" +
+                                " FROM HealthTag t" +
+                                " JOIN t.member m" +
+                                " WHERE m.id = :id" +
+                                " AND t.content = :content", HealthTag.class)
+                .setParameter("content", content)
+                .setParameter("id", userId)
+                .getResultList();
+    }
+
+    public void flush() {
+        em.flush();
+    }
+
 }

@@ -14,7 +14,6 @@ public class CreateCatReq {
     private String gender;
     private boolean neutralized;
     private String type;
-    private String mainImgUrl;
     private String profileImgUrl;
     private Coordinate coordinate;
 

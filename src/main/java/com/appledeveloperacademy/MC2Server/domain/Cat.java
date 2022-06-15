@@ -32,8 +32,6 @@ public class Cat {
 
     private boolean neutralized;
 
-    @Column(name = "main_img_url")
-    private String mainImgUrl;
 
     @Column(name = "profile_img_url")
     private String profileImgUrl;
@@ -50,7 +48,6 @@ public class Cat {
         this.birth = ageToBirth(createCatReq.getAge());
         this.gender = Gender.parseGender(createCatReq.getGender());
         this.neutralized = createCatReq.isNeutralized();
-        this.mainImgUrl = createCatReq.getMainImgUrl();
         this.profileImgUrl = createCatReq.getProfileImgUrl();
         this.coordinate = createCatReq.getCoordinate();
         this.type = createCatReq.getType();

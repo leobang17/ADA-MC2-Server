@@ -39,7 +39,6 @@ public class RoomServiceMock implements RoomService {
         cat.setNeutralized(true);
         cat.setGender(Gender.MALE);
         cat.setType("코숏");
-        cat.setMainImgUrl("https://aaa.bbb.ccc");
         cat.setProfileImgUrl("https://aaa.bbb.ccc");
         return cat;
     }

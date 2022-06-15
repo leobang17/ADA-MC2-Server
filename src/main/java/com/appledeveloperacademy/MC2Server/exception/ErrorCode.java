@@ -28,6 +28,7 @@ public enum ErrorCode {
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 서버는 PUT 요청과 충돌하는 PUT 요청에 대한 응답으로 이 코드를 요청 간 차이점 목록과 함께 표시해야 한다. */
     USERCODE_DUPLICATED(CONFLICT, "유저 코드가 중복됩니다."),
     USER_ALREADY_PARTICIPATING(CONFLICT, "유저가 이미 방에 참여하고 있습니다."),
+    TAG_DUPLICATED(CONFLICT, "이미 존재하는 태그입니다."),
     ;
 
     private final HttpStatus status;

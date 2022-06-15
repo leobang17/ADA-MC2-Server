@@ -4,9 +4,11 @@ import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.HealthTagDto;
 import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import com.appledeveloperacademy.MC2Server.service.impl.TokenService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +49,15 @@ public class UserController {
         List<HealthTag> tags = userService.findHealthTagsByUserId(userId);
         List<HealthTagDto> collect = tags.stream().map(HealthTagDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new ListedResult<>(collect));
+    }
+
+    @PostMapping("/health-tags")
+    public ResponseEntity createCustomHealthTags(
+            @RequestHeader(value = "Authorization") String usercode,
+            @RequestBody final CreateHealthTagReq tagReq
+    ) {
+        final Long userId = tokenService.authenticate(usercode);
+
+        return ResponseEntity.created(URI.create("/api/users/health-tags/")).build();
     }
 }

@@ -31,7 +31,6 @@ public class CatInfoDto {
         this.neutralized = cat.isNeutralized();
         this.gender = cat.getGender().name();
         this.type = cat.getType();
-        this.mainImgUrl = cat.getMainImgUrl();
         this.profileImgUrl = cat.getProfileImgUrl();
         this.coordinate = cat.getCoordinate();
     }

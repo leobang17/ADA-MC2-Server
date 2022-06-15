@@ -1,6 +1,7 @@
 package com.appledeveloperacademy.MC2Server.domain;
 
 import com.appledeveloperacademy.MC2Server.domain.superclass.CreationLog;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

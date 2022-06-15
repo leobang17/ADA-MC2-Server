@@ -45,6 +45,11 @@ public class Member extends CreationModificationLog {
         }
     }
 
+    public void addHealthTag(HealthTag healthTag) {
+        healthTags.add(healthTag);
+        healthTag.setMember(this);
+    }
+
     public Member(String username, String usercode) {
         this.usercode = usercode;
         this.username = username;

@@ -2,7 +2,10 @@ package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
+import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
+import com.appledeveloperacademy.MC2Server.exception.CustomException;
+import com.appledeveloperacademy.MC2Server.exception.ErrorCode;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +51,26 @@ public class UserServiceV1 implements UserService {
         userRepository.save(member);
 
         return member;
+    }
+
+    @Override
+    @Transactional
+    public Long createHealthTag(Long userId, CreateHealthTagReq tagReq) {
+        Member member = userRepository.findById(userId);
+
+        // tag 중복검사
+        List<HealthTag> tags = userRepository.listHealthTagsByTagContent(userId, tagReq.getTag());
+        System.out.println("tags.size() = " + tags.size());
+        if (tags.size() > 0) {
+            System.out.println("씨발 이래도?");
+            throw new CustomException(ErrorCode.TAG_DUPLICATED);
+        }
+
+        HealthTag tag = tagReq.build();
+        member.addHealthTags(tag);
+
+        userRepository.flush();
+
+        return tag.getId();
     }
 }
