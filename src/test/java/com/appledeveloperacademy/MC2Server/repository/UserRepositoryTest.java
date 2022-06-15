@@ -3,6 +3,8 @@ package com.appledeveloperacademy.MC2Server.repository;
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 
+import com.appledeveloperacademy.MC2Server.domain.MemberRoom;
+import com.appledeveloperacademy.MC2Server.domain.Room;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -73,6 +75,27 @@ class UserRepositoryTest {
         // then
 //        assertEquals(member.getHealthTags(), tags);
 
+    }
+
+    @Test
+    void findByUsercodeFetchRoom() {
+        // given
+        Member member = new Member();
+        member.setUsercode("123456");
+        Room room = new Room();
+        MemberRoom memberRoom = new MemberRoom();
+        room.addMemberRoom(memberRoom);
+        member.addMemberRoom(memberRoom);
+
+        em.persist(room);
+        em.persist(member);
+
+        // when
+        em.flush();
+        List<Member> byUsercodeFetchRoom = userRepository.findByUsercode(member.getUsercode());
+
+        // then
+        assertEquals(member, byUsercodeFetchRoom.get(0));
     }
 
     private Member createMember() {

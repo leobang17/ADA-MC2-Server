@@ -6,10 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import java.util.List;
 import java.util.UUID;
 
@@ -158,6 +162,45 @@ class RoomRepositoryTest {
         Cat catById = roomRepository.findCatById(cat.getId());
 
         assertEquals(cat, catById);
+    }
+
+    @Test
+    void chcckAuthorityTest() {
+        // given
+        MemberRoom memberRoom = new MemberRoom();
+        MemberRoom memberRoom2 = new MemberRoom();
+        MemberRoom memberRoom3 = new MemberRoom();
+        Member member = new Member();
+        Member member1 = new Member();
+        Room room = new Room();
+
+
+        member.addMemberRoom(memberRoom);
+        room.addMemberRoom(memberRoom);
+
+        member1.addMemberRoom(memberRoom3);
+        member1.addMemberRoom(memberRoom2);
+        room.addMemberRoom(memberRoom3);
+        room.addMemberRoom(memberRoom2);
+
+        em.persist(member);
+        em.persist(room);
+        em.persist(member1);
+
+
+        // when
+        em.flush();
+
+        MemberRoom memberRoom1 = roomRepository.checkAuthority(member.getId(), room.getId());
+
+        // then
+        assertEquals(memberRoom, memberRoom1);
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            roomRepository.checkAuthority(1L, room.getId());
+        });
+        assertThrows(IncorrectResultSizeDataAccessException.class, () -> {
+            roomRepository.checkAuthority(member1.getId(), room.getId());
+        });
     }
 
     private Member createMember(String username) {
