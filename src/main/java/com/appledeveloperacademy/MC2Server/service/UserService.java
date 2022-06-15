@@ -14,5 +14,5 @@ public interface UserService {
     Member findUserByUserCode(String usercode);
 
     List<HealthTag> findHealthTagsByUserId(Long userId);
-    Long createUser(CreateUserReq createUserReq);
+    Member createUser(CreateUserReq createUserReq);
 }

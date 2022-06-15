@@ -7,7 +7,7 @@ import com.appledeveloperacademy.MC2Server.domain.log.WaterLog;
 import com.appledeveloperacademy.MC2Server.dto.log.*;
 import com.appledeveloperacademy.MC2Server.dto.request.*;
 import com.appledeveloperacademy.MC2Server.service.LogService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +17,12 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/api/rooms")
 @RestController
-@RequiredArgsConstructor
 public class LogController {
     private final LogService logService;
+
+    public LogController(@Qualifier(value = "logServiceV1") LogService logService) {
+        this.logService = logService;
+    }
 
     // List summarized logs for a particular room
     @GetMapping("/{roomId}/logs")
@@ -136,11 +139,22 @@ public class LogController {
     }
 
     // Increase snack log for a particular room
-    @PutMapping("/{roomId}/snacks")
-    public String increaseSnacks(
-            @PathVariable final Long roomId
+    @PutMapping("/{roomId}/snacks/{snackId}")
+    public ResponseEntity increaseSnacks(
+            @PathVariable final Long roomId,
+            @PathVariable final Long snackId
     ) {
-        return "increaseSnacks";
+        final Long userId = 0L;
+        logService.increaseSnack(roomId, snackId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/test")
+    public String test(
+            @RequestHeader(value = "Authorization") String usercode
+    ) {
+        String[] token = usercode.split(" ");
+        return token[1];
     }
 }
 

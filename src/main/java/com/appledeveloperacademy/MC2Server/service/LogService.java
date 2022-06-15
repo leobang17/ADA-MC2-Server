@@ -27,4 +27,7 @@ public interface LogService {
     Long createMemoLog(Long userId, Long roomId, CreateMemoReq createMemoReq);
 
     Long createHealthLog(Long userId, Long roomId, List<CreateHealthReq> createHealthReq);
+
+    Long increaseSnack(Long roomId, Long snackId);
 }
+

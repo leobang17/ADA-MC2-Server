@@ -44,7 +44,7 @@ public class UserServiceMock implements UserService {
     }
 
     @Override
-    public Long createUser(CreateUserReq createUserReq) {
+    public Member createUser(CreateUserReq createUserReq) {
         System.out.println("\n\n\n\n\n 으아ㅏ아아ㅏ아ㅏ아ㅏ아아");
         return null;
     }

@@ -101,6 +101,11 @@ public class LogServiceMock implements LogService {
         return null;
     }
 
+    @Override
+    public Long increaseSnack(Long roomId, Long snackId) {
+        return null;
+    }
+
     private DietLog dietLogBuilder(Long logId, String dietName, int dietAmount, boolean isPublic, Long memberId, String username) {
         DietLog dietLog = new DietLog(dietName, dietAmount, LocalDateTime.now());
         dietLog.setId(logId);

@@ -36,7 +36,7 @@ public class UserServiceV1 implements UserService {
 
     @Override
     @Transactional
-    public Long createUser(CreateUserReq createUserReq) {
+    public Member createUser(CreateUserReq createUserReq) {
         String usercode;
 
         do {
@@ -47,6 +47,6 @@ public class UserServiceV1 implements UserService {
 
         userRepository.save(member);
 
-        return member.getId();
+        return member;
     }
 }

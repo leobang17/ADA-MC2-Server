@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -176,6 +177,22 @@ public class LogServiceV1 implements LogService{
         }
 
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Long increaseSnack(Long roomId, Long snackId) {
+        Room room = roomRepository.findRoomByRoomId(roomId);
+
+        Optional<Log> log = room.getLogs().stream().filter(l -> l.getId() == snackId).findFirst();
+        log.ifPresent(l -> {
+            SnackLog snackLog = (SnackLog) l;
+            snackLog.setCount(snackLog.getCount() + 1);
+        });
+
+        logRepository.flush();
+
+        return log.get().getId();
     }
 
     private Long createSnackLog(Long userId, Long roomId) {
