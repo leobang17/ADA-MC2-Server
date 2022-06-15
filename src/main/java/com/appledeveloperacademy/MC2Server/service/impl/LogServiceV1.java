@@ -14,6 +14,7 @@ import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.LogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @Qualifier(value = "logServiceV1")
@@ -66,12 +68,14 @@ public class LogServiceV1 implements LogService{
         List<SummerizedLogDto.MemoDto> memoDtos = null;
 
         List<Log> dietLog = logRepository.getTodayLogsByRoomId(roomId, LogType.DIET, isPrivate, 0, 1);
+        log.info(dietLog.size() + "식사 로그 사이즈");
         if (dietLog.size() > 0) {
             List<SummerizedLogDto.DietDto> dietDtoList = dietLog.stream().map(o -> new SummerizedLogDto.DietDto((DietLog) o)).collect(Collectors.toList());
             dietDto = dietDtoList.get(0);
         }
 
         List<Log> waterLog = logRepository.getTodayLogsByRoomId(roomId, LogType.WATER, isPrivate, 0, 1);
+        log.info(waterLog.size() + "식사 로그 사이즈");
         if (waterLog.size() > 0) {
             List<SummerizedLogDto.WaterDto> waterDtoList = waterLog.stream().map(o -> new SummerizedLogDto.WaterDto((WaterLog) o)).collect(Collectors.toList());
             waterDto = waterDtoList.get(0);
@@ -90,7 +94,7 @@ public class LogServiceV1 implements LogService{
         List<HealthTag> tags = logRepository.listHealthTagsActivated(roomId);
         healthDtos = tags.stream().map(SummerizedLogDto.HealthDto::new).collect(Collectors.toList());
 
-        List<Log> memoLogs = logRepository.getLogsByRoomId(roomId, LogType.MEMO, isPrivate, 0, 10);
+        List<Log> memoLogs = logRepository.getLogsByRoomId(roomId, LogType.MEMO, !isPrivate, 0, 10);
         memoDtos = memoLogs.stream().map(o -> new SummerizedLogDto.MemoDto((MemoLog) o)).collect(Collectors.toList());
 
         return new SummerizedLogDto(dietDto, waterDto, snackDto, healthDtos, memoDtos);

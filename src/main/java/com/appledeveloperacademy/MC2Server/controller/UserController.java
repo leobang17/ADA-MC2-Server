@@ -7,6 +7,7 @@ import com.appledeveloperacademy.MC2Server.dto.UserInfoDto;
 import com.appledeveloperacademy.MC2Server.dto.request.AuthReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
+import com.appledeveloperacademy.MC2Server.dto.request.VerifyInvitation;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import com.appledeveloperacademy.MC2Server.service.impl.TokenService;
 import org.apache.coyote.Response;
@@ -68,5 +69,15 @@ public class UserController {
     ) {
         Member userByUserCode = userService.findUserByUserCode(authReq.getUsercode());
         return ResponseEntity.ok().body(UserInfoDto.build(userByUserCode));
+    }
+
+    @PostMapping("/auth/invitation-codes")
+    public ResponseEntity verifyInvitation(
+            @RequestHeader(value = "Authorization") String usercode,
+            @RequestBody final VerifyInvitation verifyInvitation
+    ) {
+        tokenService.authenticate(usercode);
+        Long invitationId = userService.verifyInvitation(verifyInvitation.getCode());
+        return ResponseEntity.ok().header("Location", "/api/invitation-codes/" + invitationId).build();
     }
 }

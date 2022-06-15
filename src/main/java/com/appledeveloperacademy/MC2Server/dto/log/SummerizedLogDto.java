@@ -52,10 +52,12 @@ public class SummerizedLogDto {
 
     @Data
     public static class SnackDto {
+        private Long id;
         private int count;
 
         public SnackDto(SnackLog snackLog) {
             this.count = snackLog.getCount();
+            this.id = snackLog.getId();
         }
     }
 

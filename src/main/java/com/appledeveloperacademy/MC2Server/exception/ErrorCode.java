@@ -32,6 +32,7 @@ public enum ErrorCode {
     USER_ALREADY_PARTICIPATING(CONFLICT, "유저가 이미 방에 참여하고 있습니다."),
     TAG_DUPLICATED(CONFLICT, "이미 존재하는 태그입니다."),
     INVITATION_DUPLICATED(CONFLICT, "이미 초대코드가 존재합니다."),
+
     ;
 
     private final HttpStatus status;

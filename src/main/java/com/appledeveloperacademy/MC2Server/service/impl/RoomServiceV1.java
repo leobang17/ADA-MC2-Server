@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -44,6 +45,7 @@ public class RoomServiceV1 implements RoomService {
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new CustomException(ErrorCode.INVITATION_DUPLICATED);
         }
+        log.info("invitation이 아직 존재함" + invitation.getCode());
 
         // if invitation is expired,
         // Do: remove invitation and throw error
@@ -51,7 +53,7 @@ public class RoomServiceV1 implements RoomService {
             Room room = invitation.getRoom();
             room.removeInvitation(invitation);
             roomRepository.removeInvitation(invitation);
-
+            log.info("invitation이 만료되었으므로 삭제합니다.");
             throw new CustomException(ErrorCode.INVITATION_EXPIRED);
         }
 
@@ -88,6 +90,13 @@ public class RoomServiceV1 implements RoomService {
     @Override
     @Transactional
     public Long participateRoom(Long userId, Long roomId, CreateCatReq createCatReq) {
+        List<MemberRoom> memberRooms = roomRepository.listMemberRoomByUserId(userId);
+
+        boolean isParticipating = memberRooms.stream().anyMatch(mr -> mr.getRoom().getId() == roomId);
+        if (isParticipating) {
+            throw new CustomException(ErrorCode.USER_ALREADY_PARTICIPATING);
+        }
+
         Member findUser = userRepository.findById(userId);
         Room findRoom = roomRepository.findRoomByRoomId(roomId);
 
@@ -103,7 +112,7 @@ public class RoomServiceV1 implements RoomService {
     @Transactional
     public Long createInvitation(Long roomId) {
         // get room by roomId
-        Room room = roomRepository.findRoomByRoomIdWithInvitation(roomId);
+        Room room = roomRepository.findRoomByRoomId(roomId);
 
         // check if room has invitation
         Invitation invitation = room.getInvitation();
@@ -112,12 +121,14 @@ public class RoomServiceV1 implements RoomService {
             if (!invitation.isExpired()) {
                 // invitation exists and invitation is still available.
                 // Do: throw Error
-
+                throw new CustomException(ErrorCode.INVITATION_DUPLICATED);
             } else {
                 // invitation exists but invitation is expired.
                 // Do: Delete invitation
                 room.removeInvitation(invitation);
                 roomRepository.removeInvitation(invitation);
+
+                throw new CustomException(ErrorCode.INVITATION_EXPIRED);
             }
         }
 

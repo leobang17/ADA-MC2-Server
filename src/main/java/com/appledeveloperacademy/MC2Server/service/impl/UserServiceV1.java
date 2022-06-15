@@ -1,14 +1,17 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
+import com.appledeveloperacademy.MC2Server.domain.Invitation;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
 import com.appledeveloperacademy.MC2Server.exception.CustomException;
 import com.appledeveloperacademy.MC2Server.exception.ErrorCode;
+import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
 import com.appledeveloperacademy.MC2Server.repository.UserRepository;
 import com.appledeveloperacademy.MC2Server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Qualifier(value = "userServiceV1")
 public class UserServiceV1 implements UserService {
     private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
 
     @Override
     public Member findUserByUserCode(String usercode) {
@@ -77,5 +82,24 @@ public class UserServiceV1 implements UserService {
         userRepository.flush();
 
         return tag.getId();
+    }
+
+    @Override
+    public Long verifyInvitation(String code) {
+        log.info(code + "코드는 ");
+        // invitation code가 있는지 확인
+        List<Invitation> invitationList = roomRepository.getInvitationByCode(code);
+
+        if (invitationList.size() == 0) {
+            throw new CustomException(ErrorCode.INVITATION_NOT_FOUND);
+        }
+
+        // 없으면 -> 초대코드 없음 에러
+        Invitation invitation = invitationList.get(0);
+        if (invitation.isExpired()) {
+            throw new CustomException(ErrorCode.INVITATION_EXPIRED);
+        }
+
+        return invitation.getId();
     }
 }

@@ -18,4 +18,6 @@ public interface UserService {
     Member createUser(CreateUserReq createUserReq);
 
     Long createHealthTag(Long userId, CreateHealthTagReq tagReq);
+
+    Long verifyInvitation(String code);
 }

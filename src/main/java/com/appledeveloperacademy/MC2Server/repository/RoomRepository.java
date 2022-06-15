@@ -4,11 +4,13 @@ import com.appledeveloperacademy.MC2Server.domain.*;
 import com.appledeveloperacademy.MC2Server.domain.log.Log;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class RoomRepository {
@@ -45,11 +47,24 @@ public class RoomRepository {
     public List<MemberRoom> listMemberRoomByUserId(Long userId) {
         return em.createQuery(
                         "Select mr " +
-                                "FROM Member m " +
-                                "JOIN m.memberRooms mr " +
-                                "WHERE m.id = :userId", MemberRoom.class)
+                                " FROM Member m" +
+                                " JOIN m.memberRooms mr" +
+                                " WHERE m.id = :userId", MemberRoom.class)
                 .setParameter("userId", userId)
                 .getResultList();
+    }
+
+    public MemberRoom isParticipating(Long userId, Long roomId) {
+        return em.createQuery(
+                        "SELECT mr" +
+                                " FROM MemberRoom mr" +
+                                " JOIN mr.room r" +
+                                " JOIN mr.member m" +
+                                " WHERE m.id = :userId" +
+                                " AND r.id = :roomId", MemberRoom.class)
+                .setParameter("roomId", roomId)
+                .setParameter("userId", userId)
+                .getSingleResult();
     }
 
     public Room findRoomByRoomId(Long roomId) {
@@ -86,6 +101,9 @@ public class RoomRepository {
 
     public void removeInvitation(Invitation invitation) {
         em.remove(invitation);
+//        em.createNativeQuery("DELETE FROM INVITATION WHERE invitation_id = :id")
+//                .setParameter("id", invitation.getId())
+//                .executeUpdate();
         em.flush();
     }
 

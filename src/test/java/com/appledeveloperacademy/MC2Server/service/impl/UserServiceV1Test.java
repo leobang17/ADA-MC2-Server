@@ -1,6 +1,7 @@
 package com.appledeveloperacademy.MC2Server.service.impl;
 
 import com.appledeveloperacademy.MC2Server.domain.HealthTag;
+import com.appledeveloperacademy.MC2Server.domain.Invitation;
 import com.appledeveloperacademy.MC2Server.domain.Member;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateHealthTagReq;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateUserReq;
@@ -135,4 +136,12 @@ class UserServiceV1Test {
         HealthTag healthTag3 = em.find(HealthTag.class, healthTag2);
         assertEquals("태그123", healthTag3.getContent());
     }
+
+    @Test
+    void verifyInvitation() {
+        Invitation invitation = new Invitation();
+        invitation.setCode("123456");
+
+    }
+
 }

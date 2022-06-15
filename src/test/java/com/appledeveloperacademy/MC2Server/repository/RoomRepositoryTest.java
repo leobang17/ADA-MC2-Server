@@ -203,6 +203,31 @@ class RoomRepositoryTest {
         });
     }
 
+    @Test
+    void deleteInvitationTest() {
+        // create invitation
+        Invitation invitation = new Invitation();
+        Room room = new Room();
+
+        room.addInvitation(invitation);
+        em.persist(room);
+
+        em.flush();
+
+        // delete invitation
+        room.removeInvitation(invitation);
+        roomRepository.removeInvitation(invitation);
+
+        em.flush();
+        em.clear();
+
+        Invitation invitation1 = em.find(Invitation.class, invitation.getId());
+        Room room1 = em.find(Room.class, room.getId());
+
+        assertNull(room1.getInvitation());
+        assertNull(invitation1);
+    }
+
     private Member createMember(String username) {
         Member member = new Member();
         member.setUsername(username);

@@ -55,6 +55,11 @@ public class UserServiceMock implements UserService {
         return null;
     }
 
+    @Override
+    public Long verifyInvitation(String code) {
+        return null;
+    }
+
     private HealthTag buildHealthTag(Long tagId, String content) {
         HealthTag healthTag = new HealthTag();
         healthTag.setId(tagId);

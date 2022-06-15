@@ -133,7 +133,7 @@ public class LogController {
             @RequestParam(name = "offset", required = false, defaultValue = "0") final int offset
     ) {
         final Long userId = tokenService.authenticateAndAuthorize(usercode, roomId);
-        List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, isPrivate, limit, offset);
+        List<MemoLog> memoLogs = logService.getMemoLogs(userId, roomId, !isPrivate, limit, offset);
         List<MemoLogDto> collect = memoLogs.stream().map(MemoLogDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(new PagedListResult<>(collect, offset, limit));
     }
