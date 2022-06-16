@@ -83,7 +83,7 @@ class LogServiceV1Test {
 
         // when
         em.flush();
-        List<WaterLog> waterLogs = logServiceV1.getWaterLogs(member.getId(), room.getId(), true, 10, 0);
+        List<WaterLog> waterLogs = logServiceV1.getWaterLogs(member.getId(), room.getId(), false, 10, 0);
 
         // then
         assertEquals(1, waterLogs.size());

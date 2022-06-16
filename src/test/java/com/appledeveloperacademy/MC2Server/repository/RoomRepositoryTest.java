@@ -101,19 +101,20 @@ class RoomRepositoryTest {
         em.persist(room);
 
         // when
-//        em.flush();
+        em.flush();
 
-//        roomRepository.removeInvitation(invitation);
-//        em.remove(invitation);
-        int id = em.createQuery("DELETE FROM Invitation i WHERE i.id = :id").setParameter("id", invitation.getId()).executeUpdate();
+        roomRepository.removeInvitation(invitation);
+        em.remove(invitation);
 
-//        em.flush();
+        em.flush();
+        em.clear();
+
         Room room1 = em.find(Room.class, room.getId());
         Invitation invitation1 = em.find(Invitation.class, invitation.getId());
 
         // then
         assertNull(room1.getInvitation());
-//        assertNull(invitation1);
+        assertNull(invitation1);
 
     }
 
@@ -137,18 +138,28 @@ class RoomRepositoryTest {
         // given
         Invitation invitation = new Invitation();
         invitation.setCode("123456");
-        em.persist(invitation);
 
         Room room = new Room();
-        room.setInvitation(invitation);
+        room.addInvitation(invitation);
         em.persist(room);
 
         // when
         em.flush();
+//        em.clear();
         Invitation find = roomRepository.getInvitationByRoomId(room.getId());
 
         // then
         assertEquals(invitation, find);
+        
+        // when 
+        room.removeInvitation(invitation);
+        em.remove(find);
+        em.flush();
+
+        // then
+        assertThrows(EmptyResultDataAccessException.class, () -> {
+            roomRepository.getInvitationByRoomId(room.getId());
+        });
     }
 
     @Test

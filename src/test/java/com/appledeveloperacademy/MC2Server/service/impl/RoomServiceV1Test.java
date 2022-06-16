@@ -4,6 +4,7 @@ import com.appledeveloperacademy.MC2Server.domain.*;
 import com.appledeveloperacademy.MC2Server.domain.enums.Gender;
 import com.appledeveloperacademy.MC2Server.dto.InvitationCodeDto;
 import com.appledeveloperacademy.MC2Server.dto.request.CreateCatReq;
+import com.appledeveloperacademy.MC2Server.exception.CustomException;
 import com.appledeveloperacademy.MC2Server.repository.RoomRepository;
 import com.appledeveloperacademy.MC2Server.service.RoomService;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import javax.persistence.NoResultException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,15 +43,17 @@ class RoomServiceV1Test {
 
         // when
         em.persist(member);
-        System.out.println("아이디는 " + member.getId());
         Long room = roomService.createRoom(member.getId(), createCatReq);
 
         em.flush();
-        MemberRoom room1 = em.find(MemberRoom.class, room);
+        Room room1 = em.find(Room.class, room);
 
         // then
-        assertEquals(member, room1.getMember());
-        assertEquals(Gender.FEMALE, room1.getCat().getGender());
+        Optional<MemberRoom> any = room1.getMemberRooms().stream().filter(mr -> mr.getMember().getId() == member.getId()).findAny();
+        any.ifPresent((memberRoom) -> {
+            assertEquals(member, memberRoom.getMember());
+            assertEquals(Gender.FEMALE, memberRoom.getCat().getGender());
+        });
     }
 
     @Test
@@ -58,9 +62,13 @@ class RoomServiceV1Test {
         Room room = new Room();
         Invitation invitation = new Invitation();
         invitation.setCode("123456");
-        room.setInvitation(invitation);
-        invitation.setRoom(room);
+        invitation.setExpiredAt(LocalDateTime.now().plusMinutes(2));
+        room.addInvitation(invitation);
+
         Room room1 = new Room();
+//        Invitation invitation1 = new Invitation();
+//        invitation1.setCode("123123");
+//        room1.addInvitation(invitation1);
         em.persist(room);
         em.persist(room1);
 
@@ -70,7 +78,7 @@ class RoomServiceV1Test {
 
         // then
         assertEquals(invitation, invitationCodeByRoomId);
-        assertThrows(EmptyResultDataAccessException.class, () -> {
+        assertThrows(CustomException.class, () -> {
             roomService.findInvitationCodeByRoomId(room1.getId());
         });
 
@@ -162,17 +170,19 @@ class RoomServiceV1Test {
         em.persist(room);
 
         // when
-        Long invitation2 = roomService.createInvitation(room.getId());
+        assertThrows(CustomException.class, () -> {
+            Long invitation2 = roomService.createInvitation(room.getId());
+        });
 
-        em.flush();
-
-        Room room1 = em.find(Room.class, room.getId());
-        Invitation invitation3 = em.find(Invitation.class, invitation2);
-        em.flush();
-
-        // then
-        Invitation invitation1 = room1.getInvitation();
-        assertEquals(invitation1, invitation3);
+//        em.flush();
+//
+//        Room room1 = em.find(Room.class, room.getId());
+//        Invitation invitation3 = em.find(Invitation.class, invitation2);
+//        em.flush();
+//
+//        // then
+//        Invitation invitation1 = room1.getInvitation();
+//        assertEquals(invitation1, invitation3);
     }
 
     @Test

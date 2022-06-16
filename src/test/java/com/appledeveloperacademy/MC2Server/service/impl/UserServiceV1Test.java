@@ -77,17 +77,6 @@ class UserServiceV1Test {
     }
 
     @Test
-    void randomSixNumberTest() {
-        // given
-        String s = (String) ReflectionTestUtils.invokeMethod(roomService,  "generateUsercode");
-
-        // when
-        System.out.println(s);
-        // then
-        assertEquals(6, s.length());
-    }
-
-    @Test
     void createUserTest() {
         // given
         CreateUserReq createUserReq = new CreateUserReq();
